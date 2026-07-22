@@ -1186,17 +1186,27 @@
       updateFormPersonButtons();
     }
 
+    const categoryNames = Array.from(elCatChips).map(c => c.dataset.cat);
+
     elCatChips.forEach(chip => {
       chip.addEventListener("click", () => {
+        const catVal = chip.dataset.cat;
+        const currentDesc = elInputDescription.value.trim();
+
         if (chip.classList.contains("selected")) {
           chip.classList.remove("selected");
           state.currentCategory = "";
+          if (currentDesc === catVal) {
+            elInputDescription.value = "";
+          }
         } else {
           elCatChips.forEach(c => c.classList.remove("selected"));
           chip.classList.add("selected");
-          state.currentCategory = chip.dataset.cat;
-          if (!elInputDescription.value.trim()) {
-            elInputDescription.value = chip.dataset.cat;
+          state.currentCategory = catVal;
+          
+          // Switch description to new category if empty or if it matches any category
+          if (!currentDesc || categoryNames.includes(currentDesc)) {
+            elInputDescription.value = catVal;
           }
         }
       });
