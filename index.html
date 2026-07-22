@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dépenses & Revenus du Foyer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-blur: blur(16px);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --accent-foyer: #38bdf8;
+      --accent-foyer-bg: rgba(56, 189, 248, 0.12);
+      
+      --accent-debt: #a855f7;
+      --accent-debt-bg: rgba(168, 85, 247, 0.12);
+      --accent-debt-border: rgba(168, 85, 247, 0.3);
+      
+      --income: #10b981;
+      --income-bg: rgba(16, 185, 129, 0.12);
+      --expense: #f43f5e;
+      --expense-bg: rgba(244, 63, 94, 0.12);
+      
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 16px 12px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-title h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-icon {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-icon:active {
+      transform: scale(0.95);
+      color: var(--text-main);
+    }
+
+    /* Cards Base */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Total Balance Section */
+    .total-balance-card {
+      position: relative;
+      overflow: hidden;
+      border-top: 2px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .card-header-tag {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .tag-foyer {
+      background: var(--accent-foyer-bg);
+      color: var(--accent-foyer);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .foyer-main-amount {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .foyer-main-amount .currency {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .individual-balances {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .person-box {
+      background: rgba(15, 23, 42, 0.4);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .person-box-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .person-box-val {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    /* Shared Debt Section - Visually Distinct */
+    .shared-debt-card {
+      background: linear-gradient(145deg, rgba(30, 27, 75, 0.8) 0%, rgba(46, 16, 101, 0.5) 100%);
+      border: 1px solid var(--accent-debt-border);
+      position: relative;
+    }
+
+    .tag-debt {
+      background: var(--accent-debt-bg);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .debt-status-box {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin: 12px 0 16px;
+      border: 1px dashed rgba(168, 85, 247, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .debt-main-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f3e8ff;
+    }
+
+    .debt-sub-text {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .btn-reset-debt {
+      width: 100%;
+      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-reset-debt:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Form Section */
+    .form-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .segmented-control {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--input-bg);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--input-border);
+      gap: 4px;
+    }
+
+    .segment-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .segment-btn.active-expense {
+      background: var(--expense);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+    }
+
+    .segment-btn.active-income {
+      background: var(--income);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+    }
+
+    .segment-btn.active-person {
+      background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .input-field {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: #6366f1;
+    }
+
+    .amount-input-wrapper {
+      position: relative;
+    }
+
+    .amount-input-wrapper .input-field {
+      font-size: 1.3rem;
+      font-weight: 700;
+      padding-right: 36px;
+    }
+
+    .amount-currency {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+    }
+
+    .toggle-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: .3s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #a855f7;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    /* Operations History */
+    .history-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      background: var(--input-bg);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--input-border);
+      gap: 2px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    .month-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .month-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 0;
+    }
+
+    .operation-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      gap: 12px;
+      transition: background 0.2s ease;
+    }
+
+    .op-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .op-type-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .op-type-icon.depense {
+      background: var(--expense-bg);
+      color: var(--expense);
+    }
+
+    .op-type-icon.revenu {
+      background: var(--income-bg);
+      color: var(--income);
+    }
+
+    .op-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      overflow: hidden;
+    }
+
+    .op-description {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .op-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .op-badge-person {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .op-badge-shared {
+      background: var(--accent-debt-bg);
+      color: #c084fc;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .op-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .op-amount {
+      font-size: 1rem;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .op-amount.depense {
+      color: #fda4af;
+    }
+
+    .op-amount.revenu {
+      color: #6ee7b7;
+    }
+
+    .btn-delete-op {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .btn-delete-op:hover {
+      color: var(--expense);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 10px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Modal Setup & Confirmations */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-modal-cancel {
+      flex: 1;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-muted);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-modal-confirm {
+      flex: 1;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      border: none;
+      color: #fff;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Utilities */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header>
+      <div class="header-title">
+        <div class="header-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <h1>Comptes du Foyer</h1>
+      </div>
+      <button class="btn-icon" id="btn-open-config" title="Configuration des prénoms">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Block 1: Solde Total (Foyer & Individuels) -->
+    <section class="card total-balance-card">
+      <div class="card-header-tag">
+        <span class="tag tag-foyer">Solde Total Foyer</span>
+      </div>
+      <div class="foyer-main-amount" id="val-total-foyer">
+        0,00 <span class="currency">€</span>
+      </div>
+
+      <div class="individual-balances">
+        <div class="person-box">
+          <div class="person-box-name" id="label-person-a">Personne A</div>
+          <div class="person-box-val" id="val-person-a">0,00 €</div>
+        </div>
+        <div class="person-box">
+          <div class="person-box-name" id="label-person-b">Personne B</div>
+          <div class="person-box-val" id="val-person-b">0,00 €</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 2: Solde de Dettes Partagées (Visuellement Distinct) -->
+    <section class="card shared-debt-card">
+      <div class="card-header-tag">
+        <span class="tag tag-debt">Dettes Partagées</span>
+      </div>
+
+      <div class="debt-status-box">
+        <div class="debt-main-text" id="val-debt-text">Équilibré (0,00 €)</div>
+        <div class="debt-sub-text" id="val-debt-subtext">Calculé sur les dépenses partagées depuis le dernier solde</div>
+      </div>
+
+      <button class="btn-reset-debt" id="btn-open-reset-modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+          <path d="M16 16h5v5"/>
+        </svg>
+        Solder les dépenses partagées
+      </button>
+    </section>
+
+    <!-- Form: Ajout de dépense / revenu -->
+    <section class="card form-card">
+      <div class="form-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+        Nouvelle Opération
+      </div>
+
+      <!-- Type Select -->
+      <div class="segmented-control">
+        <button type="button" class="segment-btn active-expense" id="btn-type-depense">Dépense</button>
+        <button type="button" class="segment-btn" id="btn-type-revenu">Revenu</button>
+      </div>
+
+      <!-- Person Select -->
+      <div class="segmented-control">
+        <button type="button" class="segment-btn active-person" id="btn-person-a">Personne A</button>
+        <button type="button" class="segment-btn" id="btn-person-b">Personne B</button>
+      </div>
+
+      <!-- Montant -->
+      <div class="input-group">
+        <label class="input-label" for="input-montant">Montant</label>
+        <div class="amount-input-wrapper">
+          <input type="number" step="0.01" min="0" placeholder="0,00" class="input-field" id="input-montant" required inputmode="decimal">
+          <span class="amount-currency">€</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="input-group">
+        <label class="input-label" for="input-description">Description (optionnelle)</label>
+        <input type="text" placeholder="Ex: Courses, Restaurant, Loyer..." class="input-field" id="input-description">
+      </div>
+
+      <!-- Date -->
+      <div class="input-group">
+        <label class="input-label" for="input-date">Date</label>
+        <input type="date" class="input-field" id="input-date" required>
+      </div>
+
+      <!-- Toggle Partagée (Seulement pour Dépense) -->
+      <div class="toggle-row" id="toggle-partage-wrapper">
+        <div class="toggle-label">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Dépense partagée ?
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="input-partage" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="button" class="btn-submit" id="btn-submit-op">
+        Ajouter l'opération
+      </button>
+    </section>
+
+    <!-- Historique -->
+    <section class="card history-card">
+      <div class="history-header">
+        <div class="form-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"/>
+            <line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/>
+            <line x1="3" y1="6" x2="3.01" y2="6"/>
+            <line x1="3" y1="12" x2="3.01" y2="12"/>
+            <line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+          Historique
+        </div>
+
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-filter="all">Tout</button>
+          <button class="filter-btn" data-filter="depense">Dépenses</button>
+          <button class="filter-btn" data-filter="revenu">Revenus</button>
+        </div>
+      </div>
+
+      <div id="history-container">
+        <div class="empty-state">Chargement des opérations...</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Modal Initial Setup / Config Names -->
+  <div class="modal-overlay" id="modal-config">
+    <div class="modal-box">
+      <div class="modal-title">Prénoms des participants</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Indiquez les deux prénoms pour suivre vos dépenses ensemble.</p>
+      
+      <div class="input-group">
+        <label class="input-label" for="cfg-person-a">Première personne (Personne A)</label>
+        <input type="text" placeholder="Ex: Léa" class="input-field" id="cfg-person-a">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="cfg-person-b">Deuxième personne (Personne B)</label>
+        <input type="text" placeholder="Ex: Max" class="input-field" id="cfg-person-b">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal-cancel hidden" id="btn-cfg-cancel">Annuler</button>
+        <button class="btn-modal-confirm" id="btn-cfg-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Reset Debt Confirmation -->
+  <div class="modal-overlay" id="modal-reset-debt">
+    <div class="modal-box">
+      <div class="modal-title">Solder les dépenses partagées ?</div>
+      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4;">
+        Cette action remettra le solde de dettes partagées à <strong>0,00 €</strong> pour les futurs calculs.<br><br>
+        <em>Note : Vos opérations passées ne seront pas supprimées et resteront visibles dans l'historique.</em>
+      </p>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" id="btn-reset-cancel">Annuler</button>
+        <button class="btn-modal-confirm" style="background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);" id="btn-reset-confirm">Confirmer et solder</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts ES Modules CDN -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      doc, 
+      collection, 
+      addDoc, 
+      deleteDoc, 
+      setDoc, 
+      updateDoc, 
+      onSnapshot, 
+      query, 
+      orderBy, 
+      serverTimestamp,
+      Timestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDR5foaudZFeW_eyYQXAdyL-BdiiVT7s0E",
+      authDomain: "depenses-53cc7.firebaseapp.com",
+      projectId: "depenses-53cc7",
+      storageBucket: "depenses-53cc7.firebasestorage.app",
+      messagingSenderId: "773556335455",
+      appId: "1:773556335455:web:8051e49f0033b14ee7fcea"
+    };
+
+    // Initialisation
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // State global
+    let state = {
+      config: null, // { personneA, personneB, resetAt }
+      operations: [],
+      currentType: "depense", // depense | revenu
+      currentPerson: "",      // personneA value
+      currentFilter: "all"    // all | depense | revenu
+    };
+
+    // Elements DOM
+    const elLabelPersonA = document.getElementById("label-person-a");
+    const elLabelPersonB = document.getElementById("label-person-b");
+    const elValTotalFoyer = document.getElementById("val-total-foyer");
+    const elValPersonA = document.getElementById("val-person-a");
+    const elValPersonB = document.getElementById("val-person-b");
+    
+    const elValDebtText = document.getElementById("val-debt-text");
+    const elValDebtSubtext = document.getElementById("val-debt-subtext");
+    const elBtnResetDebt = document.getElementById("btn-open-reset-modal");
+
+    const elBtnTypeDepense = document.getElementById("btn-type-depense");
+    const elBtnTypeRevenu = document.getElementById("btn-type-revenu");
+    const elBtnPersonA = document.getElementById("btn-person-a");
+    const elBtnPersonB = document.getElementById("btn-person-b");
+    
+    const elInputMontant = document.getElementById("input-montant");
+    const elInputDescription = document.getElementById("input-description");
+    const elInputDate = document.getElementById("input-date");
+    const elInputPartage = document.getElementById("input-partage");
+    const elTogglePartageWrapper = document.getElementById("toggle-partage-wrapper");
+    const elBtnSubmitOp = document.getElementById("btn-submit-op");
+
+    const elHistoryContainer = document.getElementById("history-container");
+    const elFilterBtns = document.querySelectorAll(".filter-btn");
+
+    const elModalConfig = document.getElementById("modal-config");
+    const elCfgPersonA = document.getElementById("cfg-person-a");
+    const elCfgPersonB = document.getElementById("cfg-person-b");
+    const elBtnCfgSave = document.getElementById("btn-cfg-save");
+    const elBtnCfgCancel = document.getElementById("btn-cfg-cancel");
+    const elBtnOpenConfig = document.getElementById("btn-open-config");
+
+    const elModalResetDebt = document.getElementById("modal-reset-debt");
+    const elBtnResetCancel = document.getElementById("btn-reset-cancel");
+    const elBtnResetConfirm = document.getElementById("btn-reset-confirm");
+
+    // Default Today Date
+    elInputDate.value = new Date().toISOString().split("T")[0];
+
+    // Formatters
+    const formatEUR = (num) => {
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR"
+      }).format(num);
+    };
+
+    const formatDateFr = (dateStr) => {
+      if (!dateStr) return "";
+      const parts = dateStr.split("-");
+      if (parts.length !== 3) return dateStr;
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+    };
+
+    const formatMonthYear = (dateStr) => {
+      if (!dateStr) return "Inconnu";
+      const parts = dateStr.split("-");
+      if (parts.length !== 3) return "Inconnu";
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      const res = d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+      return res.charAt(0).toUpperCase() + res.slice(1);
+    };
+
+    // Setup Listeners Firestore
+    function initSync() {
+      // 1. Ecouter Config
+      const configRef = doc(db, "config", "etat");
+      onSnapshot(configRef, (snapshot) => {
+        if (!snapshot.exists()) {
+          // Premier lancement : afficher modal obligatoire
+          openConfigModal(true);
+        } else {
+          state.config = snapshot.data();
+          updateConfigUI();
+          calculateBalances();
+        }
+      }, (error) => {
+        console.error("Erreur ecoute config:", error);
+      });
+
+      // 2. Ecouter Operations
+      const opsRef = collection(db, "operations");
+      const q = query(opsRef, orderBy("date", "desc"));
+      onSnapshot(q, (snapshot) => {
+        const ops = [];
+        snapshot.forEach((docSnap) => {
+          ops.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        // Secondary sort by createdAt if available
+        ops.sort((a, b) => {
+          if (a.date !== b.date) return b.date.localeCompare(a.date);
+          const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Date.now();
+          const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Date.now();
+          return timeB - timeA;
+        });
+
+        state.operations = ops;
+        calculateBalances();
+        renderHistory();
+      }, (error) => {
+        console.error("Erreur ecoute operations:", error);
+      });
+    }
+
+    // Config Modal Management
+    function openConfigModal(isFirstLaunch = false) {
+      if (isFirstLaunch) {
+        elBtnCfgCancel.classList.add("hidden");
+        elCfgPersonA.value = "";
+        elCfgPersonB.value = "";
+      } else {
+        elBtnCfgCancel.classList.remove("hidden");
+        elCfgPersonA.value = state.config?.personneA || "";
+        elCfgPersonB.value = state.config?.personneB || "";
+      }
+      elModalConfig.classList.add("active");
+    }
+
+    function closeConfigModal() {
+      elModalConfig.classList.remove("active");
+    }
+
+    elBtnOpenConfig.addEventListener("click", () => openConfigModal(false));
+    elBtnCfgCancel.addEventListener("click", closeConfigModal);
+
+    elBtnCfgSave.addEventListener("click", async () => {
+      const nameA = elCfgPersonA.value.trim();
+      const nameB = elCfgPersonB.value.trim();
+
+      if (!nameA || !nameB) {
+        alert("Veuillez renseigner les deux prénoms.");
+        return;
+      }
+
+      if (nameA.toLowerCase() === nameB.toLowerCase()) {
+        alert("Veuillez saisir deux prénoms différents.");
+        return;
+      }
+
+      try {
+        const configRef = doc(db, "config", "etat");
+        if (!state.config) {
+          // Premier lancement
+          await setDoc(configRef, {
+            personneA: nameA,
+            personneB: nameB,
+            resetAt: serverTimestamp()
+          });
+        } else {
+          await updateDoc(configRef, {
+            personneA: nameA,
+            personneB: nameB
+          });
+        }
+        closeConfigModal();
+      } catch (err) {
+        console.error("Erreur enregistrement config:", err);
+        alert("Impossible d'enregistrer la configuration.");
+      }
+    });
+
+    // Update UI Labels with configured names
+    function updateConfigUI() {
+      if (!state.config) return;
+      const nameA = state.config.personneA || "Personne A";
+      const nameB = state.config.personneB || "Personne B";
+
+      elLabelPersonA.textContent = nameA;
+      elLabelPersonB.textContent = nameB;
+
+      elBtnPersonA.textContent = nameA;
+      elBtnPersonB.textContent = nameB;
+
+      if (!state.currentPerson || (state.currentPerson !== nameA && state.currentPerson !== nameB)) {
+        state.currentPerson = nameA;
+      }
+      updateFormPersonButtons();
+    }
+
+    // Form Controls
+    elBtnTypeDepense.addEventListener("click", () => {
+      state.currentType = "depense";
+      elBtnTypeDepense.className = "segment-btn active-expense";
+      elBtnTypeRevenu.className = "segment-btn";
+      elTogglePartageWrapper.classList.remove("hidden");
+    });
+
+    elBtnTypeRevenu.addEventListener("click", () => {
+      state.currentType = "revenu";
+      elBtnTypeRevenu.className = "segment-btn active-income";
+      elBtnTypeDepense.className = "segment-btn";
+      elTogglePartageWrapper.classList.add("hidden");
+    });
+
+    elBtnPersonA.addEventListener("click", () => {
+      if (!state.config) return;
+      state.currentPerson = state.config.personneA;
+      updateFormPersonButtons();
+    });
+
+    elBtnPersonB.addEventListener("click", () => {
+      if (!state.config) return;
+      state.currentPerson = state.config.personneB;
+      updateFormPersonButtons();
+    });
+
+    function updateFormPersonButtons() {
+      if (!state.config) return;
+      if (state.currentPerson === state.config.personneA) {
+        elBtnPersonA.className = "segment-btn active-person";
+        elBtnPersonB.className = "segment-btn";
+      } else {
+        elBtnPersonB.className = "segment-btn active-person";
+        elBtnPersonA.className = "segment-btn";
+      }
+    }
+
+    // Submit New Operation
+    elBtnSubmitOp.addEventListener("click", async () => {
+      const montantRaw = elInputMontant.value.replace(',', '.');
+      const montant = parseFloat(montantRaw);
+
+      if (isNaN(montant) || montant <= 0) {
+        alert("Veuillez saisir un montant valide supérieur à 0.");
+        return;
+      }
+
+      if (!state.currentPerson) {
+        alert("Veuillez sélectionner la personne concernée.");
+        return;
+      }
+
+      const dateVal = elInputDate.value;
+      if (!dateVal) {
+        alert("Veuillez indiquer une date.");
+        return;
+      }
+
+      const newDoc = {
+        type: state.currentType,
+        montant: montant,
+        personne: state.currentPerson,
+        partage: state.currentType === "depense" ? elInputPartage.checked : false,
+        description: elInputDescription.value.trim(),
+        date: dateVal,
+        createdAt: serverTimestamp()
+      };
+
+      try {
+        await addDoc(collection(db, "operations"), newDoc);
+        // Reset form inputs cleanly
+        elInputMontant.value = "";
+        elInputDescription.value = "";
+        elInputDate.value = new Date().toISOString().split("T")[0];
+      } catch (err) {
+        console.error("Erreur lors de l'ajout de l'opération:", err);
+        alert("Erreur lors de l'enregistrement de l'opération.");
+      }
+    });
+
+    // Reset Debt Modal
+    elBtnResetDebt.addEventListener("click", () => {
+      elModalResetDebt.classList.add("active");
+    });
+
+    elBtnResetCancel.addEventListener("click", () => {
+      elModalResetDebt.classList.remove("active");
+    });
+
+    elBtnResetConfirm.addEventListener("click", async () => {
+      try {
+        const configRef = doc(db, "config", "etat");
+        await updateDoc(configRef, {
+          resetAt: serverTimestamp()
+        });
+        elModalResetDebt.classList.remove("active");
+      } catch (err) {
+        console.error("Erreur lors du solde des dettes:", err);
+        alert("Erreur lors du solde des dettes partagées.");
+      }
+    });
+
+    // Filter Buttons
+    elFilterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        elFilterBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.currentFilter = btn.dataset.filter;
+        renderHistory();
+      });
+    });
+
+    // Calculate Balances
+    function calculateBalances() {
+      if (!state.config) return;
+      const nameA = state.config.personneA;
+      const nameB = state.config.personneB;
+      const resetAt = state.config.resetAt; // Firestore Timestamp
+
+      let totalIncomeA = 0;
+      let totalExpenseA = 0;
+      let totalIncomeB = 0;
+      let totalExpenseB = 0;
+
+      let sharedExpensePaidByA = 0;
+      let sharedExpensePaidByB = 0;
+
+      // Reset timestamp comparison cutoff
+      let resetTimeMillis = 0;
+      if (resetAt && typeof resetAt.toMillis === "function") {
+        resetTimeMillis = resetAt.toMillis();
+      }
+
+      state.operations.forEach(op => {
+        const m = Number(op.montant) || 0;
+        const isPersonA = op.personne === nameA;
+        const isPersonB = op.personne === nameB;
+
+        // 1. Calculations for Total Balances
+        if (op.type === "revenu") {
+          if (isPersonA) totalIncomeA += m;
+          if (isPersonB) totalIncomeB += m;
+        } else if (op.type === "depense") {
+          if (isPersonA) totalExpenseA += m;
+          if (isPersonB) totalExpenseB += m;
+
+          // 2. Calculation for Shared Debt Balance
+          if (op.partage === true) {
+            // Compare createdAt timestamp with resetAt
+            let opTimeMillis = 0;
+            if (op.createdAt && typeof op.createdAt.toMillis === "function") {
+              opTimeMillis = op.createdAt.toMillis();
+            } else if (op.date) {
+              // Fallback to op date if serverTimestamp is pending
+              opTimeMillis = new Date(op.date).getTime();
+            }
+
+            // Include only expenses strictly newer than resetAt
+            if (opTimeMillis >= resetTimeMillis) {
+              if (isPersonA) sharedExpensePaidByA += m;
+              if (isPersonB) sharedExpensePaidByB += m;
+            }
+          }
+        }
+      });
+
+      // Solde Total Foyer = Total Revenus (A+B) - Total Dépenses (A+B)
+      const foyerTotal = (totalIncomeA + totalIncomeB) - (totalExpenseA + totalExpenseB);
+      const personABalance = totalIncomeA - totalExpenseA;
+      const personBBalance = totalIncomeB - totalExpenseB;
+
+      elValTotalFoyer.innerHTML = `${formatEUR(foyerTotal).replace('€', '')} <span class="currency">€</span>`;
+      elValPersonA.textContent = formatEUR(personABalance);
+      elValPersonB.textContent = formatEUR(personBBalance);
+
+      // Solde de dettes partagées
+      // Net debt = (Share owed by B to A) - (Share owed by A to B)
+      // Share owed by B to A = sharedExpensePaidByA / 2
+      // Share owed by A to B = sharedExpensePaidByB / 2
+      const netDebt = (sharedExpensePaidByA / 2) - (sharedExpensePaidByB / 2);
+
+      if (Math.abs(netDebt) < 0.001) {
+        elValDebtText.textContent = "Équilibré (0,00 €)";
+        elValDebtSubtext.textContent = "Aucune dette partagée en cours.";
+      } else if (netDebt > 0) {
+        // B doit du de l'argent à A
+        elValDebtText.textContent = `${nameB} doit ${formatEUR(netDebt)} à ${nameA}`;
+        elValDebtSubtext.textContent = `${nameA} a payé ${formatEUR(sharedExpensePaidByA)} et ${nameB} a payé ${formatEUR(sharedExpensePaidByB)} en dépenses partagées.`;
+      } else {
+        // A doit de l'argent à B
+        const amount = Math.abs(netDebt);
+        elValDebtText.textContent = `${nameA} doit ${formatEUR(amount)} à ${nameB}`;
+        elValDebtSubtext.textContent = `${nameB} a payé ${formatEUR(sharedExpensePaidByB)} et ${nameA} a payé ${formatEUR(sharedExpensePaidByA)} en dépenses partagées.`;
+      }
+    }
+
+    // Render History
+    function renderHistory() {
+      const filtered = state.operations.filter(op => {
+        if (state.currentFilter === "depense") return op.type === "depense";
+        if (state.currentFilter === "revenu") return op.type === "revenu";
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        elHistoryContainer.innerHTML = `<div class="empty-state">Aucune opération enregistrée pour le moment.</div>`;
+        return;
+      }
+
+      // Group by Month Year
+      const groups = {};
+      filtered.forEach(op => {
+        const monthKey = formatMonthYear(op.date);
+        if (!groups[monthKey]) groups[monthKey] = [];
+        groups[monthKey].push(op);
+      });
+
+      let html = "";
+      for (const [month, items] of Object.entries(groups)) {
+        html += `<div class="month-group">
+          <div class="month-title">${month}</div>`;
+
+        items.forEach(op => {
+          const isExpense = op.type === "depense";
+          const icon = isExpense ? "↓" : "↑";
+          const amountSign = isExpense ? "-" : "+";
+          const desc = op.description || (isExpense ? "Dépense" : "Revenu");
+
+          html += `
+            <div class="operation-item">
+              <div class="op-left">
+                <div class="op-type-icon ${op.type}">${icon}</div>
+                <div class="op-info">
+                  <div class="op-description">${escapeHtml(desc)}</div>
+                  <div class="op-meta">
+                    <span>${formatDateFr(op.date)}</span> •
+                    <span class="op-badge-person">${escapeHtml(op.personne || "")}</span>
+                    ${op.partage ? '<span class="op-badge-shared">Partagée</span>' : ''}
+                  </div>
+                </div>
+              </div>
+              <div class="op-right">
+                <div class="op-amount ${op.type}">${amountSign}${formatEUR(op.montant)}</div>
+                <button class="btn-delete-op" data-id="${op.id}" title="Supprimer l'opération">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
+      elHistoryContainer.innerHTML = html;
+
+      // Attach Delete Handlers
+      document.querySelectorAll(".btn-delete-op").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+          const id = btn.dataset.id;
+          if (confirm("Voulez-vous vraiment supprimer cette opération ?")) {
+            try {
+              await deleteDoc(doc(db, "operations", id));
+            } catch (err) {
+              console.error("Erreur suppression:", err);
+              alert("Impossible de supprimer l'opération.");
+            }
+          }
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[m];
+      });
+    }
+
+    // Launch Realtime Listeners
+    initSync();
+  </script>
+</body>
+</html>
