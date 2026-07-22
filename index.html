@@ -9,36 +9,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-blur: blur(16px);
+      --bg-gradient: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --card-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
       
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
       
-      --accent-foyer: #38bdf8;
-      --accent-foyer-bg: rgba(56, 189, 248, 0.12);
+      /* Colors */
+      --color-max: #FA8B25;
+      --color-max-bg: rgba(250, 139, 37, 0.12);
       
-      --accent-month: #3b82f6;
-      --accent-month-bg: rgba(59, 130, 246, 0.12);
+      --color-gwen: #526E48; /* Vert Kaki élégant */
+      --color-gwen-bg: rgba(82, 110, 72, 0.12);
       
-      --accent-debt: #a855f7;
-      --accent-debt-bg: rgba(168, 85, 247, 0.12);
-      --accent-debt-border: rgba(168, 85, 247, 0.3);
+      --accent-foyer: #2563eb;
+      --accent-foyer-bg: #eff6ff;
       
-      --income: #10b981;
-      --income-bg: rgba(16, 185, 129, 0.12);
-      --expense: #f43f5e;
-      --expense-bg: rgba(244, 63, 94, 0.12);
+      --accent-month: #0284c7;
+      --accent-month-bg: #f0f9ff;
       
-      --input-bg: rgba(15, 23, 42, 0.6);
-      --input-border: rgba(255, 255, 255, 0.12);
+      --accent-debt: #7c3aed;
+      --accent-debt-bg: #f5f3ff;
+      --accent-debt-border: #ddd6fe;
+      
+      --income: #059669;
+      --income-bg: #ecfdf5;
+      --expense: #e11d48;
+      --expense-bg: #fff1f2;
+      
+      --input-bg: #f8fafc;
+      --input-border: #cbd5e1;
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -50,8 +56,7 @@
     }
 
     body {
-      background: var(--bg-gradient);
-      background-attachment: fixed;
+      background-color: var(--bg-gradient);
       color: var(--text-main);
       min-height: 100vh;
       padding: 16px 12px 40px;
@@ -82,36 +87,35 @@
     }
 
     .header-title h1 {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--text-main);
     }
 
     .header-icon {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #526E48 0%, #FA8B25 100%);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 4px 12px rgba(82, 110, 72, 0.25);
     }
 
     .btn-icon {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
       transition: all 0.2s ease;
     }
 
@@ -123,12 +127,10 @@
     /* Cards Base */
     .card {
       background: var(--card-bg);
-      backdrop-filter: var(--card-blur);
-      -webkit-backdrop-filter: var(--card-blur);
       border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
       padding: 20px;
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--card-shadow);
     }
 
     .card-header-tag {
@@ -147,22 +149,22 @@
       border-radius: 20px;
     }
 
-    /* Current Month Card - Highlighted */
+    /* Current Month Card */
     .month-card {
-      background: linear-gradient(145deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.7) 100%);
-      border-top: 2px solid #3b82f6;
+      background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
+      border-left: 4px solid #0284c7;
     }
 
     .tag-month {
       background: var(--accent-month-bg);
-      color: #60a5fa;
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #0284c7;
+      border: 1px solid rgba(2, 132, 199, 0.2);
     }
 
     .month-title-display {
       font-size: 1.5rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--text-main);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
@@ -176,53 +178,56 @@
     }
 
     .month-stat-box {
-      background: rgba(15, 23, 42, 0.5);
+      background: #ffffff;
       border-radius: var(--radius-md);
-      padding: 10px 8px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 12px 8px;
+      border: 1px solid var(--card-border);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
 
     .month-stat-label {
       font-size: 0.72rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
       margin-bottom: 4px;
+      text-transform: uppercase;
     }
 
     .month-stat-val {
-      font-size: 0.98rem;
+      font-size: 1.05rem;
       font-weight: 800;
     }
 
-    .month-stat-val.expense { color: #fda4af; }
-    .month-stat-val.income { color: #6ee7b7; }
-    .month-stat-val.balance { color: #60a5fa; }
+    .month-stat-val.expense { color: var(--expense); }
+    .month-stat-val.income { color: var(--income); }
+    .month-stat-val.balance { color: #0284c7; }
 
     /* Total Balance Section */
     .total-balance-card {
       position: relative;
       overflow: hidden;
-      border-top: 2px solid rgba(56, 189, 248, 0.4);
+      border-left: 4px solid #2563eb;
     }
 
     .tag-foyer {
       background: var(--accent-foyer-bg);
       color: var(--accent-foyer);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(37, 99, 235, 0.2);
     }
 
     .foyer-main-amount {
-      font-size: 2.2rem;
+      font-size: 2.3rem;
       font-weight: 800;
       letter-spacing: -0.03em;
       margin-bottom: 16px;
       display: flex;
       align-items: baseline;
       gap: 6px;
+      color: var(--text-main);
     }
 
     .foyer-main-amount .currency {
@@ -236,19 +241,29 @@
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-top: 1px solid var(--card-border);
     }
 
     .person-box {
-      background: rgba(15, 23, 42, 0.4);
+      background: #f8fafc;
       padding: 12px;
       border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+    }
+
+    .person-box.person-gwen {
+      border-left: 3px solid #526E48;
+      background: rgba(82, 110, 72, 0.05);
+    }
+
+    .person-box.person-max {
+      border-left: 3px solid #FA8B25;
+      background: rgba(250, 139, 37, 0.05);
     }
 
     .person-box-name {
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
       margin-bottom: 4px;
       white-space: nowrap;
@@ -258,37 +273,38 @@
 
     .person-box-val {
       font-size: 1.15rem;
-      font-weight: 700;
+      font-weight: 800;
+      color: var(--text-main);
     }
 
     /* Shared Debt Section - Visually Distinct */
     .shared-debt-card {
-      background: linear-gradient(145deg, rgba(30, 27, 75, 0.8) 0%, rgba(46, 16, 101, 0.5) 100%);
-      border: 1px solid var(--accent-debt-border);
-      position: relative;
+      background: linear-gradient(145deg, #fcf8f2 0%, #ffffff 100%);
+      border: 1px solid #fed7aa;
+      border-left: 4px solid #FA8B25;
     }
 
     .tag-debt {
-      background: var(--accent-debt-bg);
-      color: #c084fc;
-      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: rgba(250, 139, 37, 0.12);
+      color: #c2410c;
+      border: 1px solid rgba(250, 139, 37, 0.25);
     }
 
     .debt-status-box {
-      background: rgba(15, 23, 42, 0.5);
+      background: #ffffff;
       border-radius: var(--radius-md);
       padding: 16px;
       margin: 12px 0 16px;
-      border: 1px dashed rgba(168, 85, 247, 0.3);
+      border: 1px dashed rgba(250, 139, 37, 0.4);
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
     .debt-main-text {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #f3e8ff;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #9a3412;
     }
 
     .debt-sub-text {
@@ -298,11 +314,11 @@
 
     .btn-reset-debt {
       width: 100%;
-      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+      background: linear-gradient(135deg, #526E48 0%, #3e5436 100%);
       color: #fff;
       border: none;
       border-radius: var(--radius-md);
-      padding: 12px;
+      padding: 13px;
       font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
@@ -311,12 +327,11 @@
       justify-content: center;
       gap: 8px;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 4px 14px rgba(82, 110, 72, 0.25);
     }
 
     .btn-reset-debt:active {
       transform: translateY(1px);
-      box-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);
     }
 
     /* Form Section */
@@ -332,6 +347,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      color: var(--text-main);
     }
 
     .segmented-control {
@@ -359,19 +375,25 @@
     .segment-btn.active-expense {
       background: var(--expense);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.3);
     }
 
     .segment-btn.active-income {
       background: var(--income);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
     }
 
-    .segment-btn.active-person {
-      background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+    .segment-btn.active-gwen {
+      background: #526E48;
       color: #fff;
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 2px 8px rgba(82, 110, 72, 0.3);
+    }
+
+    .segment-btn.active-max {
+      background: #FA8B25;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(250, 139, 37, 0.3);
     }
 
     /* Categories Emoji Chips */
@@ -405,10 +427,10 @@
     }
 
     .cat-chip.active {
-      background: rgba(99, 102, 241, 0.25);
-      border-color: #6366f1;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+      background: #eff6ff;
+      border-color: #2563eb;
+      color: #1d4ed8;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
     }
 
     .input-group {
@@ -419,7 +441,7 @@
 
     .input-label {
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
     }
 
@@ -436,7 +458,8 @@
     }
 
     .input-field:focus {
-      border-color: #6366f1;
+      border-color: #FA8B25;
+      background: #ffffff;
     }
 
     .amount-input-wrapper {
@@ -445,7 +468,7 @@
 
     .amount-input-wrapper .input-field {
       font-size: 1.3rem;
-      font-weight: 700;
+      font-weight: 800;
       padding-right: 36px;
     }
 
@@ -455,7 +478,7 @@
       top: 50%;
       transform: translateY(-50%);
       font-size: 1.2rem;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text-muted);
     }
 
@@ -467,7 +490,6 @@
       border: 1px solid var(--input-border);
       padding: 12px 14px;
       border-radius: var(--radius-md);
-      transition: all 0.3s ease;
     }
 
     .toggle-label {
@@ -495,7 +517,7 @@
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: #cbd5e1;
       transition: .3s;
       border-radius: 34px;
     }
@@ -510,10 +532,11 @@
       background-color: white;
       transition: .3s;
       border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
 
     input:checked + .slider {
-      background-color: #a855f7;
+      background-color: #526E48;
     }
 
     input:checked + .slider:before {
@@ -522,7 +545,7 @@
 
     .btn-submit {
       width: 100%;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background: linear-gradient(135deg, #FA8B25 0%, #e07412 100%);
       color: #fff;
       border: none;
       border-radius: var(--radius-md);
@@ -534,7 +557,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 4px 16px rgba(250, 139, 37, 0.3);
       transition: all 0.2s ease;
     }
 
@@ -584,8 +607,9 @@
     }
 
     .filter-btn.active {
-      background: rgba(255, 255, 255, 0.12);
+      background: #ffffff;
       color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .month-select-dropdown {
@@ -609,8 +633,8 @@
 
     .month-title {
       font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--text-dim);
+      font-weight: 800;
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       padding: 4px 0;
@@ -620,12 +644,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: #ffffff;
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-md);
       padding: 12px 14px;
       gap: 12px;
-      transition: background 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .op-left {
@@ -682,16 +706,26 @@
     }
 
     .op-badge-person {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-weight: 600;
-      color: #cbd5e1;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.72rem;
+    }
+
+    .op-badge-person.badge-gwen {
+      background: rgba(82, 110, 72, 0.15);
+      color: #3b5033;
+    }
+
+    .op-badge-person.badge-max {
+      background: rgba(250, 139, 37, 0.15);
+      color: #c25e00;
     }
 
     .op-badge-shared {
-      background: var(--accent-debt-bg);
-      color: #c084fc;
+      background: #f5f3ff;
+      color: #7c3aed;
+      border: 1px solid #ddd6fe;
       padding: 1px 6px;
       border-radius: 4px;
       font-weight: 700;
@@ -714,11 +748,11 @@
     }
 
     .op-amount.depense {
-      color: #fda4af;
+      color: var(--expense);
     }
 
     .op-amount.revenu {
-      color: #6ee7b7;
+      color: var(--income);
     }
 
     .btn-delete-op {
@@ -746,8 +780,8 @@
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -764,13 +798,13 @@
     }
 
     .modal-box {
-      background: #1e293b;
+      background: #ffffff;
       border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
       padding: 24px;
       width: 100%;
       max-width: 440px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -785,6 +819,7 @@
     .modal-title {
       font-size: 1.2rem;
       font-weight: 800;
+      color: var(--text-main);
     }
 
     .modal-actions {
@@ -806,7 +841,7 @@
 
     .btn-modal-confirm {
       flex: 1;
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      background: linear-gradient(135deg, #526E48 0%, #FA8B25 100%);
       border: none;
       color: #fff;
       padding: 12px;
@@ -879,11 +914,11 @@
       </div>
 
       <div class="individual-balances">
-        <div class="person-box">
+        <div class="person-box person-gwen" id="box-person-a">
           <div class="person-box-name" id="label-person-a">Personne A</div>
           <div class="person-box-val" id="val-person-a">0,00 €</div>
         </div>
-        <div class="person-box">
+        <div class="person-box person-max" id="box-person-b">
           <div class="person-box-name" id="label-person-b">Personne B</div>
           <div class="person-box-val" id="val-person-b">0,00 €</div>
         </div>
@@ -915,7 +950,7 @@
     <!-- Form: Ajout de dépense / revenu -->
     <section class="card form-card">
       <div class="form-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FA8B25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="8" x2="12" y2="16"/>
           <line x1="8" y1="12" x2="16" y2="12"/>
@@ -931,8 +966,8 @@
 
       <!-- Person Select -->
       <div class="segmented-control">
-        <button type="button" class="segment-btn active-person" id="btn-person-a">Personne A</button>
-        <button type="button" class="segment-btn" id="btn-person-b">Personne B</button>
+        <button type="button" class="segment-btn active-gwen" id="btn-person-a">Gwen</button>
+        <button type="button" class="segment-btn" id="btn-person-b">Max</button>
       </div>
 
       <!-- Catégories Express par Émojis -->
@@ -972,7 +1007,7 @@
       <!-- Toggle Partagée (Seulement pour Dépense) -->
       <div class="toggle-row" id="toggle-partage-wrapper">
         <div class="toggle-label">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#526E48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
             <circle cx="9" cy="7" r="4"/>
             <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
@@ -996,7 +1031,7 @@
     <section class="card history-card">
       <div class="history-header">
         <div class="form-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="8" y1="6" x2="21" y2="6"/>
             <line x1="8" y1="12" x2="21" y2="12"/>
             <line x1="8" y1="18" x2="21" y2="18"/>
@@ -1032,16 +1067,16 @@
   <div class="modal-overlay" id="modal-config">
     <div class="modal-box">
       <div class="modal-title">Prénoms des participants</div>
-      <p style="font-size: 0.85rem; color: var(--text-muted);">Indiquez les deux prénoms pour suivre vos dépenses ensemble.</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Indiquez les deux prénoms (ex: Gwen et Max) pour personnaliser les couleurs.</p>
       
       <div class="input-group">
-        <label class="input-label" for="cfg-person-a">Première personne (Personne A)</label>
-        <input type="text" placeholder="Ex: Léa" class="input-field" id="cfg-person-a">
+        <label class="input-label" for="cfg-person-a">Première personne (ex: Gwen)</label>
+        <input type="text" placeholder="Gwen" class="input-field" id="cfg-person-a">
       </div>
 
       <div class="input-group">
-        <label class="input-label" for="cfg-person-b">Deuxième personne (Personne B)</label>
-        <input type="text" placeholder="Ex: Max" class="input-field" id="cfg-person-b">
+        <label class="input-label" for="cfg-person-b">Deuxième personne (ex: Max)</label>
+        <input type="text" placeholder="Max" class="input-field" id="cfg-person-b">
       </div>
 
       <div class="modal-actions">
@@ -1061,7 +1096,7 @@
       </p>
       <div class="modal-actions">
         <button class="btn-modal-cancel" id="btn-reset-cancel">Annuler</button>
-        <button class="btn-modal-confirm" style="background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);" id="btn-reset-confirm">Confirmer et solder</button>
+        <button class="btn-modal-confirm" style="background: linear-gradient(135deg, #526E48 0%, #FA8B25 100%);" id="btn-reset-confirm">Confirmer et solder</button>
       </div>
     </div>
   </div>
@@ -1117,6 +1152,9 @@
 
     const elLabelPersonA = document.getElementById("label-person-a");
     const elLabelPersonB = document.getElementById("label-person-b");
+    const elBoxPersonA = document.getElementById("box-person-a");
+    const elBoxPersonB = document.getElementById("box-person-b");
+
     const elValTotalFoyer = document.getElementById("val-total-foyer");
     const elValPersonA = document.getElementById("val-person-a");
     const elValPersonB = document.getElementById("val-person-b");
@@ -1185,6 +1223,11 @@
       return res.charAt(0).toUpperCase() + res.slice(1);
     };
 
+    // Helper for Person Colors
+    function isMax(name) {
+      return name && name.toLowerCase().includes("max");
+    }
+
     // Initialize Header Month Display
     elDisplayCurrentMonth.textContent = `📅 ${formatMonthYear(todayISO)}`;
 
@@ -1233,8 +1276,8 @@
     function openConfigModal(isFirstLaunch = false) {
       if (isFirstLaunch) {
         elBtnCfgCancel.classList.add("hidden");
-        elCfgPersonA.value = "";
-        elCfgPersonB.value = "";
+        elCfgPersonA.value = "Gwen";
+        elCfgPersonB.value = "Max";
       } else {
         elBtnCfgCancel.classList.remove("hidden");
         elCfgPersonA.value = state.config?.personneA || "";
@@ -1287,14 +1330,23 @@
 
     function updateConfigUI() {
       if (!state.config) return;
-      const nameA = state.config.personneA || "Personne A";
-      const nameB = state.config.personneB || "Personne B";
+      const nameA = state.config.personneA || "Gwen";
+      const nameB = state.config.personneB || "Max";
 
       elLabelPersonA.textContent = nameA;
       elLabelPersonB.textContent = nameB;
 
       elBtnPersonA.textContent = nameA;
       elBtnPersonB.textContent = nameB;
+
+      // Assign styling boxes based on name
+      if (isMax(nameA)) {
+        elBoxPersonA.className = "person-box person-max";
+        elBoxPersonB.className = "person-box person-gwen";
+      } else {
+        elBoxPersonA.className = "person-box person-gwen";
+        elBoxPersonB.className = "person-box person-max";
+      }
 
       if (!state.currentPerson || (state.currentPerson !== nameA && state.currentPerson !== nameB)) {
         state.currentPerson = nameA;
@@ -1313,7 +1365,6 @@
           chip.classList.add("active");
           state.currentCategory = chip.dataset.cat;
           
-          // Auto-fill description if currently empty
           if (!elInputDescription.value.trim()) {
             elInputDescription.value = chip.dataset.cat;
           }
@@ -1350,11 +1401,19 @@
 
     function updateFormPersonButtons() {
       if (!state.config) return;
-      if (state.currentPerson === state.config.personneA) {
-        elBtnPersonA.className = "segment-btn active-person";
+      const nameA = state.config.personneA;
+      const nameB = state.config.personneB;
+
+      const isA = state.currentPerson === nameA;
+      
+      const classA = isMax(nameA) ? "active-max" : "active-gwen";
+      const classB = isMax(nameB) ? "active-max" : "active-gwen";
+
+      if (isA) {
+        elBtnPersonA.className = `segment-btn ${classA}`;
         elBtnPersonB.className = "segment-btn";
       } else {
-        elBtnPersonB.className = "segment-btn active-person";
+        elBtnPersonB.className = `segment-btn ${classB}`;
         elBtnPersonA.className = "segment-btn";
       }
     }
@@ -1397,7 +1456,6 @@
 
       try {
         await addDoc(collection(db, "operations"), newDoc);
-        // Reset form inputs cleanly
         elInputMontant.value = "";
         elInputDescription.value = "";
         elCatChips.forEach(c => c.classList.remove("active"));
@@ -1566,11 +1624,9 @@
     // Render History
     function renderHistory() {
       const filtered = state.operations.filter(op => {
-        // Filter Type
         if (state.currentFilter === "depense" && op.type !== "depense") return false;
         if (state.currentFilter === "revenu" && op.type !== "revenu") return false;
 
-        // Filter Month
         if (state.selectedMonthFilter === "current") {
           return op.date && op.date.substring(0, 7) === currentMonthKey;
         } else if (state.selectedMonthFilter !== "all") {
@@ -1603,6 +1659,7 @@
           const icon = isExpense ? "↓" : "↑";
           const amountSign = isExpense ? "-" : "+";
           const desc = op.description || (isExpense ? "Dépense" : "Revenu");
+          const badgeClass = isMax(op.personne) ? "badge-max" : "badge-gwen";
 
           html += `
             <div class="operation-item">
@@ -1612,7 +1669,7 @@
                   <div class="op-description">${escapeHtml(desc)}</div>
                   <div class="op-meta">
                     <span>${formatDateFr(op.date)}</span> •
-                    <span class="op-badge-person">${escapeHtml(op.personne || "")}</span>
+                    <span class="op-badge-person ${badgeClass}">${escapeHtml(op.personne || "")}</span>
                     ${op.partage ? '<span class="op-badge-shared">Partagée</span>' : ''}
                   </div>
                 </div>
