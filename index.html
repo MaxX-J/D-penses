@@ -21,6 +21,9 @@
       --accent-foyer: #38bdf8;
       --accent-foyer-bg: rgba(56, 189, 248, 0.12);
       
+      --accent-month: #3b82f6;
+      --accent-month-bg: rgba(59, 130, 246, 0.12);
+      
       --accent-debt: #a855f7;
       --accent-debt-bg: rgba(168, 85, 247, 0.12);
       --accent-debt-border: rgba(168, 85, 247, 0.3);
@@ -128,13 +131,6 @@
       box-shadow: var(--shadow-lg);
     }
 
-    /* Total Balance Section */
-    .total-balance-card {
-      position: relative;
-      overflow: hidden;
-      border-top: 2px solid rgba(56, 189, 248, 0.4);
-    }
-
     .card-header-tag {
       display: flex;
       align-items: center;
@@ -149,6 +145,68 @@
       letter-spacing: 0.08em;
       padding: 4px 10px;
       border-radius: 20px;
+    }
+
+    /* Current Month Card - Highlighted */
+    .month-card {
+      background: linear-gradient(145deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.7) 100%);
+      border-top: 2px solid #3b82f6;
+    }
+
+    .tag-month {
+      background: var(--accent-month-bg);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .month-title-display {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .month-stat-box {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: var(--radius-md);
+      padding: 10px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .month-stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .month-stat-val {
+      font-size: 0.98rem;
+      font-weight: 800;
+    }
+
+    .month-stat-val.expense { color: #fda4af; }
+    .month-stat-val.income { color: #6ee7b7; }
+    .month-stat-val.balance { color: #60a5fa; }
+
+    /* Total Balance Section */
+    .total-balance-card {
+      position: relative;
+      overflow: hidden;
+      border-top: 2px solid rgba(56, 189, 248, 0.4);
     }
 
     .tag-foyer {
@@ -316,6 +374,43 @@
       box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
     }
 
+    /* Categories Emoji Chips */
+    .category-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .category-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-chip {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .cat-chip.active {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #6366f1;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+    }
+
     .input-group {
       display: flex;
       flex-direction: column;
@@ -462,6 +557,12 @@
       gap: 10px;
     }
 
+    .filter-group-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .filter-tabs {
       display: flex;
       background: var(--input-bg);
@@ -485,6 +586,18 @@
     .filter-btn.active {
       background: rgba(255, 255, 255, 0.12);
       color: var(--text-main);
+    }
+
+    .month-select-dropdown {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-main);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
     }
 
     .month-group {
@@ -730,6 +843,32 @@
       </button>
     </header>
 
+    <!-- Block 0: Mois En Cours - Grand Format -->
+    <section class="card month-card">
+      <div class="card-header-tag">
+        <span class="tag tag-month">Mois en cours</span>
+      </div>
+      
+      <div class="month-title-display" id="display-current-month">
+        📅 Juillet 2026
+      </div>
+
+      <div class="month-grid">
+        <div class="month-stat-box">
+          <div class="month-stat-label">Dépenses</div>
+          <div class="month-stat-val expense" id="month-val-expense">0,00 €</div>
+        </div>
+        <div class="month-stat-box">
+          <div class="month-stat-label">Revenus</div>
+          <div class="month-stat-val income" id="month-val-income">0,00 €</div>
+        </div>
+        <div class="month-stat-box">
+          <div class="month-stat-label">Bilan du mois</div>
+          <div class="month-stat-val balance" id="month-val-balance">0,00 €</div>
+        </div>
+      </div>
+    </section>
+
     <!-- Block 1: Solde Total (Foyer & Individuels) -->
     <section class="card total-balance-card">
       <div class="card-header-tag">
@@ -796,6 +935,19 @@
         <button type="button" class="segment-btn" id="btn-person-b">Personne B</button>
       </div>
 
+      <!-- Catégories Express par Émojis -->
+      <div class="input-group">
+        <label class="input-label">Catégorie rapide</label>
+        <div class="category-pills" id="category-pills">
+          <button type="button" class="cat-chip" data-cat="🛒 Courses">🛒 Courses</button>
+          <button type="button" class="cat-chip" data-cat="🏠 Logement">🏠 Logement</button>
+          <button type="button" class="cat-chip" data-cat="🍽️ Restos / Sorties">🍽️ Restos</button>
+          <button type="button" class="cat-chip" data-cat="🚗 Transport">🚗 Transport</button>
+          <button type="button" class="cat-chip" data-cat="⚡ Factures">⚡ Factures</button>
+          <button type="button" class="cat-chip" data-cat="🎁 Loisirs">🎁 Loisirs</button>
+        </div>
+      </div>
+
       <!-- Montant -->
       <div class="input-group">
         <label class="input-label" for="input-montant">Montant</label>
@@ -808,7 +960,7 @@
       <!-- Description -->
       <div class="input-group">
         <label class="input-label" for="input-description">Description (optionnelle)</label>
-        <input type="text" placeholder="Ex: Courses, Restaurant, Loyer..." class="input-field" id="input-description">
+        <input type="text" placeholder="Ex: Courses Carrefour, Restaurant, Loyer..." class="input-field" id="input-description">
       </div>
 
       <!-- Date -->
@@ -855,10 +1007,17 @@
           Historique
         </div>
 
-        <div class="filter-tabs">
-          <button class="filter-btn active" data-filter="all">Tout</button>
-          <button class="filter-btn" data-filter="depense">Dépenses</button>
-          <button class="filter-btn" data-filter="revenu">Revenus</button>
+        <div class="filter-group-controls">
+          <select id="select-month-filter" class="month-select-dropdown">
+            <option value="current">Mois en cours</option>
+            <option value="all">Tous les mois</option>
+          </select>
+
+          <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">Tout</button>
+            <button class="filter-btn" data-filter="depense">Dépenses</button>
+            <button class="filter-btn" data-filter="revenu">Revenus</button>
+          </div>
         </div>
       </div>
 
@@ -945,10 +1104,17 @@
       operations: [],
       currentType: "depense", // depense | revenu
       currentPerson: "",      // personneA value
-      currentFilter: "all"    // all | depense | revenu
+      currentCategory: "",    // category selected
+      currentFilter: "all",   // all | depense | revenu
+      selectedMonthFilter: "current" // current | all | "YYYY-MM"
     };
 
     // Elements DOM
+    const elDisplayCurrentMonth = document.getElementById("display-current-month");
+    const elMonthValExpense = document.getElementById("month-val-expense");
+    const elMonthValIncome = document.getElementById("month-val-income");
+    const elMonthValBalance = document.getElementById("month-val-balance");
+
     const elLabelPersonA = document.getElementById("label-person-a");
     const elLabelPersonB = document.getElementById("label-person-b");
     const elValTotalFoyer = document.getElementById("val-total-foyer");
@@ -970,9 +1136,11 @@
     const elInputPartage = document.getElementById("input-partage");
     const elTogglePartageWrapper = document.getElementById("toggle-partage-wrapper");
     const elBtnSubmitOp = document.getElementById("btn-submit-op");
+    const elCatChips = document.querySelectorAll(".cat-chip");
 
     const elHistoryContainer = document.getElementById("history-container");
     const elFilterBtns = document.querySelectorAll(".filter-btn");
+    const elSelectMonthFilter = document.getElementById("select-month-filter");
 
     const elModalConfig = document.getElementById("modal-config");
     const elCfgPersonA = document.getElementById("cfg-person-a");
@@ -986,7 +1154,11 @@
     const elBtnResetConfirm = document.getElementById("btn-reset-confirm");
 
     // Default Today Date
-    elInputDate.value = new Date().toISOString().split("T")[0];
+    const todayISO = new Date().toISOString().split("T")[0];
+    elInputDate.value = todayISO;
+
+    // Current Month Key "YYYY-MM"
+    const currentMonthKey = todayISO.substring(0, 7);
 
     // Formatters
     const formatEUR = (num) => {
@@ -1007,11 +1179,14 @@
     const formatMonthYear = (dateStr) => {
       if (!dateStr) return "Inconnu";
       const parts = dateStr.split("-");
-      if (parts.length !== 3) return "Inconnu";
-      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      if (parts.length < 2) return "Inconnu";
+      const d = new Date(parts[0], parts[1] - 1, 1);
       const res = d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
       return res.charAt(0).toUpperCase() + res.slice(1);
     };
+
+    // Initialize Header Month Display
+    elDisplayCurrentMonth.textContent = `📅 ${formatMonthYear(todayISO)}`;
 
     // Setup Listeners Firestore
     function initSync() {
@@ -1019,7 +1194,6 @@
       const configRef = doc(db, "config", "etat");
       onSnapshot(configRef, (snapshot) => {
         if (!snapshot.exists()) {
-          // Premier lancement : afficher modal obligatoire
           openConfigModal(true);
         } else {
           state.config = snapshot.data();
@@ -1038,7 +1212,7 @@
         snapshot.forEach((docSnap) => {
           ops.push({ id: docSnap.id, ...docSnap.data() });
         });
-        // Secondary sort by createdAt if available
+        
         ops.sort((a, b) => {
           if (a.date !== b.date) return b.date.localeCompare(a.date);
           const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Date.now();
@@ -1047,6 +1221,7 @@
         });
 
         state.operations = ops;
+        updateMonthFilterDropdownOptions();
         calculateBalances();
         renderHistory();
       }, (error) => {
@@ -1092,7 +1267,6 @@
       try {
         const configRef = doc(db, "config", "etat");
         if (!state.config) {
-          // Premier lancement
           await setDoc(configRef, {
             personneA: nameA,
             personneB: nameB,
@@ -1111,7 +1285,6 @@
       }
     });
 
-    // Update UI Labels with configured names
     function updateConfigUI() {
       if (!state.config) return;
       const nameA = state.config.personneA || "Personne A";
@@ -1128,6 +1301,25 @@
       }
       updateFormPersonButtons();
     }
+
+    // Category Emoji Pills Selection
+    elCatChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        if (chip.classList.contains("active")) {
+          chip.classList.remove("active");
+          state.currentCategory = "";
+        } else {
+          elCatChips.forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          state.currentCategory = chip.dataset.cat;
+          
+          // Auto-fill description if currently empty
+          if (!elInputDescription.value.trim()) {
+            elInputDescription.value = chip.dataset.cat;
+          }
+        }
+      });
+    });
 
     // Form Controls
     elBtnTypeDepense.addEventListener("click", () => {
@@ -1188,12 +1380,17 @@
         return;
       }
 
+      let desc = elInputDescription.value.trim();
+      if (!desc && state.currentCategory) {
+        desc = state.currentCategory;
+      }
+
       const newDoc = {
         type: state.currentType,
         montant: montant,
         personne: state.currentPerson,
         partage: state.currentType === "depense" ? elInputPartage.checked : false,
-        description: elInputDescription.value.trim(),
+        description: desc,
         date: dateVal,
         createdAt: serverTimestamp()
       };
@@ -1203,6 +1400,8 @@
         // Reset form inputs cleanly
         elInputMontant.value = "";
         elInputDescription.value = "";
+        elCatChips.forEach(c => c.classList.remove("active"));
+        state.currentCategory = "";
         elInputDate.value = new Date().toISOString().split("T")[0];
       } catch (err) {
         console.error("Erreur lors de l'ajout de l'opération:", err);
@@ -1232,7 +1431,7 @@
       }
     });
 
-    // Filter Buttons
+    // Filter Buttons & Month Dropdown
     elFilterBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         elFilterBtns.forEach(b => b.classList.remove("active"));
@@ -1242,22 +1441,53 @@
       });
     });
 
-    // Calculate Balances
+    elSelectMonthFilter.addEventListener("change", (e) => {
+      state.selectedMonthFilter = e.target.value;
+      renderHistory();
+    });
+
+    function updateMonthFilterDropdownOptions() {
+      const monthsSet = new Set();
+      state.operations.forEach(op => {
+        if (op.date) {
+          monthsSet.add(op.date.substring(0, 7));
+        }
+      });
+      monthsSet.add(currentMonthKey);
+
+      const sortedMonths = Array.from(monthsSet).sort().reverse();
+
+      let optionsHTML = `<option value="current">Mois en cours (${formatMonthYear(currentMonthKey + "-01")})</option>`;
+      optionsHTML += `<option value="all">Tous les mois</option>`;
+
+      sortedMonths.forEach(mKey => {
+        if (mKey !== currentMonthKey) {
+          optionsHTML += `<option value="${mKey}">${formatMonthYear(mKey + "-01")}</option>`;
+        }
+      });
+
+      elSelectMonthFilter.innerHTML = optionsHTML;
+      elSelectMonthFilter.value = state.selectedMonthFilter;
+    }
+
+    // Calculate Balances & Monthly Stats
     function calculateBalances() {
       if (!state.config) return;
       const nameA = state.config.personneA;
       const nameB = state.config.personneB;
-      const resetAt = state.config.resetAt; // Firestore Timestamp
+      const resetAt = state.config.resetAt;
 
       let totalIncomeA = 0;
       let totalExpenseA = 0;
       let totalIncomeB = 0;
       let totalExpenseB = 0;
 
+      let monthExpense = 0;
+      let monthIncome = 0;
+
       let sharedExpensePaidByA = 0;
       let sharedExpensePaidByB = 0;
 
-      // Reset timestamp comparison cutoff
       let resetTimeMillis = 0;
       if (resetAt && typeof resetAt.toMillis === "function") {
         resetTimeMillis = resetAt.toMillis();
@@ -1267,27 +1497,27 @@
         const m = Number(op.montant) || 0;
         const isPersonA = op.personne === nameA;
         const isPersonB = op.personne === nameB;
+        const isCurrentMonth = op.date && op.date.substring(0, 7) === currentMonthKey;
 
-        // 1. Calculations for Total Balances
+        // Total Overall Balances
         if (op.type === "revenu") {
           if (isPersonA) totalIncomeA += m;
           if (isPersonB) totalIncomeB += m;
+          if (isCurrentMonth) monthIncome += m;
         } else if (op.type === "depense") {
           if (isPersonA) totalExpenseA += m;
           if (isPersonB) totalExpenseB += m;
+          if (isCurrentMonth) monthExpense += m;
 
-          // 2. Calculation for Shared Debt Balance
+          // Shared Debt Balance
           if (op.partage === true) {
-            // Compare createdAt timestamp with resetAt
             let opTimeMillis = 0;
             if (op.createdAt && typeof op.createdAt.toMillis === "function") {
               opTimeMillis = op.createdAt.toMillis();
             } else if (op.date) {
-              // Fallback to op date if serverTimestamp is pending
               opTimeMillis = new Date(op.date).getTime();
             }
 
-            // Include only expenses strictly newer than resetAt
             if (opTimeMillis >= resetTimeMillis) {
               if (isPersonA) sharedExpensePaidByA += m;
               if (isPersonB) sharedExpensePaidByB += m;
@@ -1295,6 +1525,18 @@
           }
         }
       });
+
+      // Update Monthly Stats Banner
+      const monthBalance = monthIncome - monthExpense;
+      elMonthValExpense.textContent = formatEUR(monthExpense);
+      elMonthValIncome.textContent = formatEUR(monthIncome);
+      elMonthValBalance.textContent = formatEUR(monthBalance);
+      
+      if (monthBalance >= 0) {
+        elMonthValBalance.className = "month-stat-val income";
+      } else {
+        elMonthValBalance.className = "month-stat-val expense";
+      }
 
       // Solde Total Foyer = Total Revenus (A+B) - Total Dépenses (A+B)
       const foyerTotal = (totalIncomeA + totalIncomeB) - (totalExpenseA + totalExpenseB);
@@ -1306,20 +1548,15 @@
       elValPersonB.textContent = formatEUR(personBBalance);
 
       // Solde de dettes partagées
-      // Net debt = (Share owed by B to A) - (Share owed by A to B)
-      // Share owed by B to A = sharedExpensePaidByA / 2
-      // Share owed by A to B = sharedExpensePaidByB / 2
       const netDebt = (sharedExpensePaidByA / 2) - (sharedExpensePaidByB / 2);
 
       if (Math.abs(netDebt) < 0.001) {
         elValDebtText.textContent = "Équilibré (0,00 €)";
         elValDebtSubtext.textContent = "Aucune dette partagée en cours.";
       } else if (netDebt > 0) {
-        // B doit du de l'argent à A
         elValDebtText.textContent = `${nameB} doit ${formatEUR(netDebt)} à ${nameA}`;
         elValDebtSubtext.textContent = `${nameA} a payé ${formatEUR(sharedExpensePaidByA)} et ${nameB} a payé ${formatEUR(sharedExpensePaidByB)} en dépenses partagées.`;
       } else {
-        // A doit de l'argent à B
         const amount = Math.abs(netDebt);
         elValDebtText.textContent = `${nameA} doit ${formatEUR(amount)} à ${nameB}`;
         elValDebtSubtext.textContent = `${nameB} a payé ${formatEUR(sharedExpensePaidByB)} et ${nameA} a payé ${formatEUR(sharedExpensePaidByA)} en dépenses partagées.`;
@@ -1329,13 +1566,22 @@
     // Render History
     function renderHistory() {
       const filtered = state.operations.filter(op => {
-        if (state.currentFilter === "depense") return op.type === "depense";
-        if (state.currentFilter === "revenu") return op.type === "revenu";
+        // Filter Type
+        if (state.currentFilter === "depense" && op.type !== "depense") return false;
+        if (state.currentFilter === "revenu" && op.type !== "revenu") return false;
+
+        // Filter Month
+        if (state.selectedMonthFilter === "current") {
+          return op.date && op.date.substring(0, 7) === currentMonthKey;
+        } else if (state.selectedMonthFilter !== "all") {
+          return op.date && op.date.substring(0, 7) === state.selectedMonthFilter;
+        }
+
         return true;
       });
 
       if (filtered.length === 0) {
-        elHistoryContainer.innerHTML = `<div class="empty-state">Aucune opération enregistrée pour le moment.</div>`;
+        elHistoryContainer.innerHTML = `<div class="empty-state">Aucune opération enregistrée pour cette sélection.</div>`;
         return;
       }
 
