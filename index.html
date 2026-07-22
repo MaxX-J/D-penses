@@ -3,61 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dépenses & Revenus du Foyer</title>
+  <title>Dépenses du Foyer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-gradient: #f8fafc;
-      --card-bg: #ffffff;
-      --card-border: #e2e8f0;
-      --card-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+      --bg: #f3f4f6;
+      --surface: #ffffff;
       
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --text-dim: #94a3b8;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --text-tertiary: #9ca3af;
       
-      /* Colors */
       --color-max: #FA8B25;
-      --color-max-bg: rgba(250, 139, 37, 0.12);
+      --color-max-light: #fff7ed;
+      --color-max-border: #ffedd5;
       
-      --color-gwen: #526E48; /* Vert Kaki élégant */
-      --color-gwen-bg: rgba(82, 110, 72, 0.12);
+      --color-gwen: #526E48;
+      --color-gwen-light: #f4f7f3;
+      --color-gwen-border: #e2e9e0;
       
-      --accent-foyer: #2563eb;
-      --accent-foyer-bg: #eff6ff;
-      
-      --accent-month: #0284c7;
-      --accent-month-bg: #f0f9ff;
-      
-      --accent-debt: #7c3aed;
-      --accent-debt-bg: #f5f3ff;
-      --accent-debt-border: #ddd6fe;
-      
-      --income: #059669;
+      --income: #10b981;
       --income-bg: #ecfdf5;
-      --expense: #e11d48;
-      --expense-bg: #fff1f2;
+      --expense: #ef4444;
+      --expense-bg: #fef2f2;
       
-      --input-bg: #f8fafc;
-      --input-border: #cbd5e1;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-gradient);
-      color: var(--text-main);
+      background-color: var(--bg);
+      color: var(--text-primary);
       min-height: 100vh;
       padding: 16px 12px 40px;
       display: flex;
@@ -66,878 +58,788 @@
 
     .app-container {
       width: 100%;
-      max-width: 640px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    /* Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 4px;
-    }
-
-    .header-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-title h1 {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text-main);
-    }
-
-    .header-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, #526E48 0%, #FA8B25 100%);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(82, 110, 72, 0.25);
-    }
-
-    .btn-icon {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-      transition: all 0.2s ease;
-    }
-
-    .btn-icon:active {
-      transform: scale(0.95);
-      color: var(--text-main);
-    }
-
-    /* Cards Base */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      box-shadow: var(--card-shadow);
-    }
-
-    .card-header-tag {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-
-    /* Current Month Card */
-    .month-card {
-      background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
-      border-left: 4px solid #0284c7;
-    }
-
-    .tag-month {
-      background: var(--accent-month-bg);
-      color: #0284c7;
-      border: 1px solid rgba(2, 132, 199, 0.2);
-    }
-
-    .month-title-display {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .month-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-    }
-
-    .month-stat-box {
-      background: #ffffff;
-      border-radius: var(--radius-md);
-      padding: 12px 8px;
-      border: 1px solid var(--card-border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-
-    .month-stat-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-
-    .month-stat-val {
-      font-size: 1.05rem;
-      font-weight: 800;
-    }
-
-    .month-stat-val.expense { color: var(--expense); }
-    .month-stat-val.income { color: var(--income); }
-    .month-stat-val.balance { color: #0284c7; }
-
-    /* Total Balance Section */
-    .total-balance-card {
-      position: relative;
-      overflow: hidden;
-      border-left: 4px solid #2563eb;
-    }
-
-    .tag-foyer {
-      background: var(--accent-foyer-bg);
-      color: var(--accent-foyer);
-      border: 1px solid rgba(37, 99, 235, 0.2);
-    }
-
-    .foyer-main-amount {
-      font-size: 2.3rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      color: var(--text-main);
-    }
-
-    .foyer-main-amount .currency {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .individual-balances {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding-top: 14px;
-      border-top: 1px solid var(--card-border);
-    }
-
-    .person-box {
-      background: #f8fafc;
-      padding: 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--card-border);
-    }
-
-    .person-box.person-gwen {
-      border-left: 3px solid #526E48;
-      background: rgba(82, 110, 72, 0.05);
-    }
-
-    .person-box.person-max {
-      border-left: 3px solid #FA8B25;
-      background: rgba(250, 139, 37, 0.05);
-    }
-
-    .person-box-name {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .person-box-val {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    /* Shared Debt Section - Visually Distinct */
-    .shared-debt-card {
-      background: linear-gradient(145deg, #fcf8f2 0%, #ffffff 100%);
-      border: 1px solid #fed7aa;
-      border-left: 4px solid #FA8B25;
-    }
-
-    .tag-debt {
-      background: rgba(250, 139, 37, 0.12);
-      color: #c2410c;
-      border: 1px solid rgba(250, 139, 37, 0.25);
-    }
-
-    .debt-status-box {
-      background: #ffffff;
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin: 12px 0 16px;
-      border: 1px dashed rgba(250, 139, 37, 0.4);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .debt-main-text {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #9a3412;
-    }
-
-    .debt-sub-text {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    .btn-reset-debt {
-      width: 100%;
-      background: linear-gradient(135deg, #526E48 0%, #3e5436 100%);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-md);
-      padding: 13px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(82, 110, 72, 0.25);
-    }
-
-    .btn-reset-debt:active {
-      transform: translateY(1px);
-    }
-
-    /* Form Section */
-    .form-card {
+      max-width: 600px;
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .form-title {
-      font-size: 1.05rem;
-      font-weight: 700;
+    /* Minimalist Top App Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px 4px;
+    }
+
+    .brand {
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: var(--text-main);
+      gap: 10px;
     }
 
-    .segmented-control {
+    .brand-avatar-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .avatar-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fff;
+      border: 2px solid #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .avatar-gwen { background-color: var(--color-gwen); }
+    .avatar-max { background-color: var(--color-max); margin-left: -10px; }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-settings {
+      background: var(--surface);
+      border: none;
+      color: var(--text-secondary);
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+
+    .btn-settings:active {
+      transform: scale(0.92);
+    }
+
+    /* Clean Card Component */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Hero Dashboard Card */
+    .hero-card {
+      background: #ffffff;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .month-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--bg);
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+    }
+
+    .total-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+
+    .total-amount-large {
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    /* Monthly stats strip */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      gap: 8px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .stat-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .stat-val.exp { color: var(--expense); }
+    .stat-val.inc { color: var(--income); }
+    .stat-val.bal { color: #2563eb; }
+
+    /* Individual Balances Row */
+    .people-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      background: var(--input-bg);
-      padding: 4px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--input-border);
-      gap: 4px;
+      gap: 12px;
     }
 
-    .segment-btn {
+    .person-card {
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .person-card.gwen {
+      background: var(--color-gwen-light);
+      border: 1px solid var(--color-gwen-border);
+    }
+
+    .person-card.max {
+      background: var(--color-max-light);
+      border: 1px solid var(--color-max-border);
+    }
+
+    .person-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .person-name {
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .person-card.gwen .person-name { color: var(--color-gwen); }
+    .person-card.max .person-name { color: var(--color-max); }
+
+    .person-val {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    /* Shared Debt Alert Banner */
+    .debt-banner {
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .debt-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .debt-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #78716c;
+      background: #f5f5f4;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .debt-text-main {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #292524;
+    }
+
+    .debt-text-sub {
+      font-size: 0.78rem;
+      color: #78716c;
+    }
+
+    .btn-solder {
+      background: #292524;
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s ease;
+    }
+
+    .btn-solder:active {
+      background: #000000;
+    }
+
+    /* Clean Add Form */
+    .add-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section-header {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    /* Apple-style Segmented Pickers */
+    .picker-segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: var(--radius-md);
+      gap: 3px;
+    }
+
+    .picker-btn {
       background: transparent;
       border: none;
-      color: var(--text-muted);
-      padding: 10px;
+      padding: 9px;
       border-radius: var(--radius-sm);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
+      color: var(--text-secondary);
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .segment-btn.active-expense {
-      background: var(--expense);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.3);
+    .picker-btn.active-exp {
+      background: #ffffff;
+      color: var(--expense);
+      box-shadow: var(--shadow-sm);
     }
 
-    .segment-btn.active-income {
-      background: var(--income);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+    .picker-btn.active-inc {
+      background: #ffffff;
+      color: var(--income);
+      box-shadow: var(--shadow-sm);
     }
 
-    .segment-btn.active-gwen {
-      background: #526E48;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(82, 110, 72, 0.3);
+    .picker-btn.active-gwen {
+      background: var(--color-gwen);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
     }
 
-    .segment-btn.active-max {
-      background: #FA8B25;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(250, 139, 37, 0.3);
+    .picker-btn.active-max {
+      background: var(--color-max);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
     }
 
-    /* Categories Emoji Chips */
-    .category-pills {
+    /* Emoji Category Chips */
+    .chips-scroll {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding-bottom: 4px;
+      padding-bottom: 2px;
       scrollbar-width: none;
     }
+    .chips-scroll::-webkit-scrollbar { display: none; }
 
-    .category-pills::-webkit-scrollbar {
-      display: none;
-    }
-
-    .cat-chip {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      color: var(--text-muted);
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 0.82rem;
+    .chip-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: var(--text-secondary);
+      padding: 7px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
       transition: all 0.2s ease;
       flex-shrink: 0;
     }
 
-    .cat-chip.active {
-      background: #eff6ff;
-      border-color: #2563eb;
-      color: #1d4ed8;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+    .chip-item.selected {
+      background: #1e293b;
+      border-color: #1e293b;
+      color: #ffffff;
     }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .input-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .input-field {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
+    /* Big Amount Input */
+    .amount-input-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: var(--radius-md);
-      padding: 12px 14px;
-      color: var(--text-main);
-      font-size: 0.95rem;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    .input-field:focus {
-      border-color: #FA8B25;
-      background: #ffffff;
-    }
-
-    .amount-input-wrapper {
-      position: relative;
-    }
-
-    .amount-input-wrapper .input-field {
-      font-size: 1.3rem;
-      font-weight: 800;
-      padding-right: 36px;
-    }
-
-    .amount-currency {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--text-muted);
-    }
-
-    .toggle-row {
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      padding: 12px 14px;
-      border-radius: var(--radius-md);
+      transition: border-color 0.2s ease;
     }
 
-    .toggle-label {
+    .amount-input-box:focus-within {
+      border-color: #000000;
+      background: #ffffff;
+    }
+
+    .amount-field {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      width: 100%;
+    }
+
+    .amount-currency {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-tertiary);
+    }
+
+    /* Clean Input */
+    .field-input {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
       font-size: 0.9rem;
       font-weight: 600;
+      color: var(--text-primary);
+      outline: none;
+      width: 100%;
+    }
+
+    .field-input:focus {
+      border-color: #000000;
+      background: #ffffff;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Custom Toggle Switch */
+    .toggle-bar {
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+    }
+
+    .toggle-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
     }
 
     .switch {
       position: relative;
       display: inline-block;
-      width: 48px;
-      height: 26px;
+      width: 44px;
+      height: 24px;
     }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
+    .switch input { opacity: 0; width: 0; height: 0; }
     .slider {
-      position: absolute;
-      cursor: pointer;
+      position: absolute; cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
       background-color: #cbd5e1;
-      transition: .3s;
+      transition: .2s;
       border-radius: 34px;
     }
-
     .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
+      position: absolute; content: "";
+      height: 18px; width: 18px;
+      left: 3px; bottom: 3px;
       background-color: white;
-      transition: .3s;
+      transition: .2s;
       border-radius: 50%;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow-sm);
     }
+    input:checked + .slider { background-color: var(--color-gwen); }
+    input:checked + .slider:before { transform: translateX(20px); }
 
-    input:checked + .slider {
-      background-color: #526E48;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(22px);
-    }
-
-    .btn-submit {
-      width: 100%;
-      background: linear-gradient(135deg, #FA8B25 0%, #e07412 100%);
-      color: #fff;
+    .btn-add {
+      background: #111827;
+      color: #ffffff;
       border: none;
       border-radius: var(--radius-md);
       padding: 14px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 16px rgba(250, 139, 37, 0.3);
+      width: 100%;
+      box-shadow: var(--shadow-md);
       transition: all 0.2s ease;
     }
 
-    .btn-submit:active {
-      transform: scale(0.99);
+    .btn-add:active {
+      transform: scale(0.98);
+      background: #000000;
     }
 
-    /* Operations History */
+    /* History List - Clean Inset Group */
     .history-card {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    .history-header {
+    .history-toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .filter-group-controls {
-      display: flex;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
-    .filter-tabs {
+    .filter-pills {
       display: flex;
-      background: var(--input-bg);
+      background: #f1f5f9;
       padding: 3px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
       gap: 2px;
     }
 
     .filter-btn {
       background: transparent;
       border: none;
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.78rem;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
       font-weight: 700;
+      color: var(--text-secondary);
       cursor: pointer;
     }
 
     .filter-btn.active {
       background: #ffffff;
-      color: var(--text-main);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
     }
 
-    .month-select-dropdown {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      color: var(--text-main);
+    .select-month {
+      background: #f1f5f9;
+      border: none;
       padding: 6px 10px;
       border-radius: var(--radius-sm);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
+      color: var(--text-primary);
       outline: none;
       cursor: pointer;
     }
 
-    .month-group {
+    .history-group {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 6px;
     }
 
-    .month-title {
-      font-size: 0.82rem;
+    .history-month-header {
+      font-size: 0.75rem;
       font-weight: 800;
-      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      padding: 4px 0;
+      color: var(--text-tertiary);
+      padding: 6px 2px 2px;
     }
 
-    .operation-item {
+    .history-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #ffffff;
-      border: 1px solid var(--card-border);
+      padding: 12px;
+      background: #f8fafc;
       border-radius: var(--radius-md);
-      padding: 12px 14px;
       gap: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
-    .op-left {
+    .item-left {
       display: flex;
       align-items: center;
       gap: 12px;
       overflow: hidden;
     }
 
-    .op-type-icon {
-      width: 38px;
-      height: 38px;
+    .item-icon {
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      font-size: 1.1rem;
-      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      flex-shrink: 0;
     }
 
-    .op-type-icon.depense {
-      background: var(--expense-bg);
-      color: var(--expense);
-    }
+    .item-icon.depense { background: var(--expense-bg); color: var(--expense); }
+    .item-icon.revenu { background: var(--income-bg); color: var(--income); }
 
-    .op-type-icon.revenu {
-      background: var(--income-bg);
-      color: var(--income);
-    }
-
-    .op-info {
+    .item-details {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
       overflow: hidden;
     }
 
-    .op-description {
-      font-size: 0.92rem;
+    .item-title {
+      font-size: 0.88rem;
       font-weight: 700;
-      color: var(--text-main);
+      color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .op-meta {
+    .item-sub {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-    }
-
-    .op-badge-person {
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 700;
       font-size: 0.72rem;
+      color: var(--text-secondary);
     }
 
-    .op-badge-person.badge-gwen {
-      background: rgba(82, 110, 72, 0.15);
-      color: #3b5033;
-    }
-
-    .op-badge-person.badge-max {
-      background: rgba(250, 139, 37, 0.15);
-      color: #c25e00;
-    }
-
-    .op-badge-shared {
-      background: #f5f3ff;
-      color: #7c3aed;
-      border: 1px solid #ddd6fe;
+    .badge-name {
       padding: 1px 6px;
       border-radius: 4px;
       font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 3px;
+      font-size: 0.7rem;
     }
 
-    .op-right {
+    .badge-gwen { background: var(--color-gwen-light); color: var(--color-gwen); }
+    .badge-max { background: var(--color-max-light); color: var(--color-max); }
+
+    .badge-shared {
+      background: #f3e8ff;
+      color: #7e22ce;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.7rem;
+    }
+
+    .item-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
-    .op-amount {
-      font-size: 1rem;
+    .item-amount {
+      font-size: 0.95rem;
       font-weight: 800;
-      text-align: right;
     }
 
-    .op-amount.depense {
-      color: var(--expense);
-    }
+    .item-amount.depense { color: var(--text-primary); }
+    .item-amount.revenu { color: var(--income); }
 
-    .op-amount.revenu {
-      color: var(--income);
-    }
-
-    .btn-delete-op {
+    .btn-del {
       background: transparent;
       border: none;
-      color: var(--text-dim);
+      color: var(--text-tertiary);
       cursor: pointer;
       padding: 4px;
-      border-radius: 6px;
-      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
     }
 
-    .btn-delete-op:hover {
-      color: var(--expense);
-    }
+    .btn-del:hover { color: var(--expense); }
 
-    .empty-state {
-      text-align: center;
-      padding: 30px 10px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* Modal Setup & Confirmations */
-    .modal-overlay {
+    /* Clean Modal */
+    .modal-backdrop {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(6px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
-      z-index: 1000;
+      z-index: 100;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
     }
 
-    .modal-overlay.active {
+    .modal-backdrop.open {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .modal-box {
+    .modal-card {
       background: #ffffff;
-      border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
       padding: 24px;
       width: 100%;
-      max-width: 440px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
       display: flex;
       flex-direction: column;
       gap: 16px;
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
     }
 
-    .modal-overlay.active .modal-box {
-      transform: translateY(0);
-    }
-
-    .modal-title {
-      font-size: 1.2rem;
+    .modal-head {
+      font-size: 1.1rem;
       font-weight: 800;
-      color: var(--text-main);
     }
 
-    .modal-actions {
+    .modal-btns {
       display: flex;
       gap: 10px;
-      margin-top: 8px;
     }
 
-    .btn-modal-cancel {
+    .btn-cancel {
       flex: 1;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      color: var(--text-muted);
-      padding: 12px;
-      border-radius: var(--radius-md);
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-modal-confirm {
-      flex: 1;
-      background: linear-gradient(135deg, #526E48 0%, #FA8B25 100%);
+      background: #f1f5f9;
       border: none;
-      color: #fff;
-      padding: 12px;
+      color: var(--text-secondary);
+      padding: 11px;
       border-radius: var(--radius-md);
       font-weight: 700;
       cursor: pointer;
     }
 
-    /* Utilities */
-    .hidden {
-      display: none !important;
+    .btn-confirm {
+      flex: 1;
+      background: #111827;
+      border: none;
+      color: #ffffff;
+      padding: 11px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      cursor: pointer;
     }
+
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <div class="app-container">
     
-    <!-- Header -->
+    <!-- Top Bar -->
     <header>
-      <div class="header-title">
-        <div class="header-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-          </svg>
+      <div class="brand">
+        <div class="brand-avatar-group">
+          <div class="avatar-pill avatar-gwen" id="av-gwen">G</div>
+          <div class="avatar-pill avatar-max" id="av-max">M</div>
         </div>
-        <h1>Comptes du Foyer</h1>
+        <div class="brand-title">Dépenses du Foyer</div>
       </div>
-      <button class="btn-icon" id="btn-open-config" title="Configuration des prénoms">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <button class="btn-settings" id="btn-open-config" title="Changer les prénoms">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
         </svg>
       </button>
     </header>
 
-    <!-- Block 0: Mois En Cours - Grand Format -->
-    <section class="card month-card">
-      <div class="card-header-tag">
-        <span class="tag tag-month">Mois en cours</span>
-      </div>
-      
-      <div class="month-title-display" id="display-current-month">
-        📅 Juillet 2026
+    <!-- Dashboard Main Hero Card -->
+    <section class="card hero-card">
+      <div class="hero-top">
+        <div>
+          <div class="total-title">Solde Total Foyer</div>
+          <div class="total-amount-large" id="val-total-foyer">0,00 €</div>
+        </div>
+        <div class="month-badge" id="display-current-month">
+          Juillet 2026
+        </div>
       </div>
 
-      <div class="month-grid">
-        <div class="month-stat-box">
-          <div class="month-stat-label">Dépenses</div>
-          <div class="month-stat-val expense" id="month-val-expense">0,00 €</div>
+      <!-- Stats strip for current month -->
+      <div class="stats-strip">
+        <div class="stat-item">
+          <div class="stat-label">Dépenses</div>
+          <div class="stat-val exp" id="month-val-expense">0,00 €</div>
         </div>
-        <div class="month-stat-box">
-          <div class="month-stat-label">Revenus</div>
-          <div class="month-stat-val income" id="month-val-income">0,00 €</div>
+        <div class="stat-item">
+          <div class="stat-label">Revenus</div>
+          <div class="stat-val inc" id="month-val-income">0,00 €</div>
         </div>
-        <div class="month-stat-box">
-          <div class="month-stat-label">Bilan du mois</div>
-          <div class="month-stat-val balance" id="month-val-balance">0,00 €</div>
+        <div class="stat-item">
+          <div class="stat-label">Bilan Mois</div>
+          <div class="stat-val bal" id="month-val-balance">0,00 €</div>
         </div>
-      </div>
-    </section>
-
-    <!-- Block 1: Solde Total (Foyer & Individuels) -->
-    <section class="card total-balance-card">
-      <div class="card-header-tag">
-        <span class="tag tag-foyer">Solde Total Foyer</span>
-      </div>
-      <div class="foyer-main-amount" id="val-total-foyer">
-        0,00 <span class="currency">€</span>
       </div>
 
-      <div class="individual-balances">
-        <div class="person-box person-gwen" id="box-person-a">
-          <div class="person-box-name" id="label-person-a">Personne A</div>
-          <div class="person-box-val" id="val-person-a">0,00 €</div>
+      <!-- Individual balances side by side -->
+      <div class="people-row">
+        <div class="person-card gwen" id="box-person-a">
+          <div class="person-card-header">
+            <span class="person-name" id="label-person-a">Gwen</span>
+          </div>
+          <div class="person-val" id="val-person-a">0,00 €</div>
         </div>
-        <div class="person-box person-max" id="box-person-b">
-          <div class="person-box-name" id="label-person-b">Personne B</div>
-          <div class="person-box-val" id="val-person-b">0,00 €</div>
+        <div class="person-card max" id="box-person-b">
+          <div class="person-card-header">
+            <span class="person-name" id="label-person-b">Max</span>
+          </div>
+          <div class="person-val" id="val-person-b">0,00 €</div>
         </div>
       </div>
     </section>
 
-    <!-- Block 2: Solde de Dettes Partagées (Visuellement Distinct) -->
-    <section class="card shared-debt-card">
-      <div class="card-header-tag">
-        <span class="tag tag-debt">Dettes Partagées</span>
+    <!-- Shared Debt Banner -->
+    <section class="debt-banner">
+      <div class="debt-header">
+        <span class="debt-tag">Solde Dettes Partagées</span>
       </div>
-
-      <div class="debt-status-box">
-        <div class="debt-main-text" id="val-debt-text">Équilibré (0,00 €)</div>
-        <div class="debt-sub-text" id="val-debt-subtext">Calculé sur les dépenses partagées depuis le dernier solde</div>
+      <div>
+        <div class="debt-text-main" id="val-debt-text">Équilibré (0,00 €)</div>
+        <div class="debt-text-sub" id="val-debt-subtext">Calculé sur les dépenses partagées depuis le dernier solde</div>
       </div>
-
-      <button class="btn-reset-debt" id="btn-open-reset-modal">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <button class="btn-solder" id="btn-open-reset-modal">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
           <path d="M3 3v5h5"/>
           <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
@@ -947,108 +849,71 @@
       </button>
     </section>
 
-    <!-- Form: Ajout de dépense / revenu -->
-    <section class="card form-card">
-      <div class="form-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FA8B25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="16"/>
-          <line x1="8" y1="12" x2="16" y2="12"/>
-        </svg>
-        Nouvelle Opération
+    <!-- Form: Ajout Rapide -->
+    <section class="card add-card">
+      <div class="section-header">Nouvelle opération</div>
+
+      <!-- Type Picker -->
+      <div class="picker-segmented">
+        <button type="button" class="picker-btn active-exp" id="btn-type-depense">Dépense</button>
+        <button type="button" class="picker-btn" id="btn-type-revenu">Revenu</button>
       </div>
 
-      <!-- Type Select -->
-      <div class="segmented-control">
-        <button type="button" class="segment-btn active-expense" id="btn-type-depense">Dépense</button>
-        <button type="button" class="segment-btn" id="btn-type-revenu">Revenu</button>
+      <!-- Person Picker -->
+      <div class="picker-segmented">
+        <button type="button" class="picker-btn active-gwen" id="btn-person-a">Gwen</button>
+        <button type="button" class="picker-btn" id="btn-person-b">Max</button>
       </div>
 
-      <!-- Person Select -->
-      <div class="segmented-control">
-        <button type="button" class="segment-btn active-gwen" id="btn-person-a">Gwen</button>
-        <button type="button" class="segment-btn" id="btn-person-b">Max</button>
+      <!-- Categories Emoji Pills -->
+      <div class="chips-scroll" id="category-pills">
+        <button type="button" class="chip-item" data-cat="🛒 Courses">🛒 Courses</button>
+        <button type="button" class="chip-item" data-cat="🏠 Logement">🏠 Logement</button>
+        <button type="button" class="chip-item" data-cat="🍽️ Restos">🍽️ Restos</button>
+        <button type="button" class="chip-item" data-cat="🚗 Transport">🚗 Transport</button>
+        <button type="button" class="chip-item" data-cat="⚡ Factures">⚡ Factures</button>
+        <button type="button" class="chip-item" data-cat="🎁 Loisirs">🎁 Loisirs</button>
       </div>
 
-      <!-- Catégories Express par Émojis -->
-      <div class="input-group">
-        <label class="input-label">Catégorie rapide</label>
-        <div class="category-pills" id="category-pills">
-          <button type="button" class="cat-chip" data-cat="🛒 Courses">🛒 Courses</button>
-          <button type="button" class="cat-chip" data-cat="🏠 Logement">🏠 Logement</button>
-          <button type="button" class="cat-chip" data-cat="🍽️ Restos / Sorties">🍽️ Restos</button>
-          <button type="button" class="cat-chip" data-cat="🚗 Transport">🚗 Transport</button>
-          <button type="button" class="cat-chip" data-cat="⚡ Factures">⚡ Factures</button>
-          <button type="button" class="cat-chip" data-cat="🎁 Loisirs">🎁 Loisirs</button>
-        </div>
+      <!-- Big Amount Input -->
+      <div class="amount-input-box">
+        <input type="number" step="0.01" min="0" placeholder="0,00" class="amount-field" id="input-montant" required inputmode="decimal">
+        <span class="amount-currency">€</span>
       </div>
 
-      <!-- Montant -->
-      <div class="input-group">
-        <label class="input-label" for="input-montant">Montant</label>
-        <div class="amount-input-wrapper">
-          <input type="number" step="0.01" min="0" placeholder="0,00" class="input-field" id="input-montant" required inputmode="decimal">
-          <span class="amount-currency">€</span>
-        </div>
+      <div class="form-row">
+        <!-- Description -->
+        <input type="text" placeholder="Description (optionnelle)" class="field-input" id="input-description">
+        <!-- Date -->
+        <input type="date" class="field-input" id="input-date" required>
       </div>
 
-      <!-- Description -->
-      <div class="input-group">
-        <label class="input-label" for="input-description">Description (optionnelle)</label>
-        <input type="text" placeholder="Ex: Courses Carrefour, Restaurant, Loyer..." class="input-field" id="input-description">
-      </div>
-
-      <!-- Date -->
-      <div class="input-group">
-        <label class="input-label" for="input-date">Date</label>
-        <input type="date" class="input-field" id="input-date" required>
-      </div>
-
-      <!-- Toggle Partagée (Seulement pour Dépense) -->
-      <div class="toggle-row" id="toggle-partage-wrapper">
-        <div class="toggle-label">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#526E48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Dépense partagée ?
-        </div>
+      <!-- Toggle Partagée (Dépenses uniquement) -->
+      <div class="toggle-bar" id="toggle-partage-wrapper">
+        <span class="toggle-text">Dépense partagée ?</span>
         <label class="switch">
           <input type="checkbox" id="input-partage" checked>
           <span class="slider"></span>
         </label>
       </div>
 
-      <!-- Submit Button -->
-      <button type="button" class="btn-submit" id="btn-submit-op">
+      <button type="button" class="btn-add" id="btn-submit-op">
         Ajouter l'opération
       </button>
     </section>
 
     <!-- Historique -->
     <section class="card history-card">
-      <div class="history-header">
-        <div class="form-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="8" y1="6" x2="21" y2="6"/>
-            <line x1="8" y1="12" x2="21" y2="12"/>
-            <line x1="8" y1="18" x2="21" y2="18"/>
-            <line x1="3" y1="6" x2="3.01" y2="6"/>
-            <line x1="3" y1="12" x2="3.01" y2="12"/>
-            <line x1="3" y1="18" x2="3.01" y2="18"/>
-          </svg>
-          Historique
-        </div>
+      <div class="history-toolbar">
+        <div class="section-header">Historique</div>
 
-        <div class="filter-group-controls">
-          <select id="select-month-filter" class="month-select-dropdown">
+        <div style="display: flex; gap: 6px;">
+          <select id="select-month-filter" class="select-month">
             <option value="current">Mois en cours</option>
             <option value="all">Tous les mois</option>
           </select>
 
-          <div class="filter-tabs">
+          <div class="filter-pills">
             <button class="filter-btn active" data-filter="all">Tout</button>
             <button class="filter-btn" data-filter="depense">Dépenses</button>
             <button class="filter-btn" data-filter="revenu">Revenus</button>
@@ -1057,51 +922,49 @@
       </div>
 
       <div id="history-container">
-        <div class="empty-state">Chargement des opérations...</div>
+        <div class="empty-state">Chargement...</div>
       </div>
     </section>
 
   </div>
 
-  <!-- Modal Initial Setup / Config Names -->
-  <div class="modal-overlay" id="modal-config">
-    <div class="modal-box">
-      <div class="modal-title">Prénoms des participants</div>
-      <p style="font-size: 0.85rem; color: var(--text-muted);">Indiquez les deux prénoms (ex: Gwen et Max) pour personnaliser les couleurs.</p>
+  <!-- Modal Config Prénoms -->
+  <div class="modal-backdrop" id="modal-config">
+    <div class="modal-card">
+      <div class="modal-head">Prénoms des participants</div>
       
-      <div class="input-group">
-        <label class="input-label" for="cfg-person-a">Première personne (ex: Gwen)</label>
-        <input type="text" placeholder="Gwen" class="input-field" id="cfg-person-a">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary);">Personne A (Vert Kaki)</label>
+        <input type="text" placeholder="Gwen" class="field-input" id="cfg-person-a">
       </div>
 
-      <div class="input-group">
-        <label class="input-label" for="cfg-person-b">Deuxième personne (ex: Max)</label>
-        <input type="text" placeholder="Max" class="input-field" id="cfg-person-b">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary);">Personne B (Orange)</label>
+        <input type="text" placeholder="Max" class="field-input" id="cfg-person-b">
       </div>
 
-      <div class="modal-actions">
-        <button class="btn-modal-cancel hidden" id="btn-cfg-cancel">Annuler</button>
-        <button class="btn-modal-confirm" id="btn-cfg-save">Enregistrer</button>
+      <div class="modal-btns">
+        <button class="btn-cancel hidden" id="btn-cfg-cancel">Annuler</button>
+        <button class="btn-confirm" id="btn-cfg-save">Enregistrer</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Reset Debt Confirmation -->
-  <div class="modal-overlay" id="modal-reset-debt">
-    <div class="modal-box">
-      <div class="modal-title">Solder les dépenses partagées ?</div>
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4;">
-        Cette action remettra le solde de dettes partagées à <strong>0,00 €</strong> pour les futurs calculs.<br><br>
-        <em>Note : Vos opérations passées ne seront pas supprimées et resteront visibles dans l'historique.</em>
+  <!-- Modal Confirm Reset Debt -->
+  <div class="modal-backdrop" id="modal-reset-debt">
+    <div class="modal-card">
+      <div class="modal-head">Solder les dépenses partagées ?</div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">
+        Cette action remettra le solde de dettes partagées à <strong>0,00 €</strong> pour les futurs calculs sans supprimer l'historique des opérations.
       </p>
-      <div class="modal-actions">
-        <button class="btn-modal-cancel" id="btn-reset-cancel">Annuler</button>
-        <button class="btn-modal-confirm" style="background: linear-gradient(135deg, #526E48 0%, #FA8B25 100%);" id="btn-reset-confirm">Confirmer et solder</button>
+      <div class="modal-btns">
+        <button class="btn-cancel" id="btn-reset-cancel">Annuler</button>
+        <button class="btn-confirm" id="btn-reset-confirm">Confirmer</button>
       </div>
     </div>
   </div>
 
-  <!-- Firebase Scripts ES Modules CDN -->
+  <!-- Firebase Scripts CDN -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { 
@@ -1115,11 +978,9 @@
       onSnapshot, 
       query, 
       orderBy, 
-      serverTimestamp,
-      Timestamp
+      serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // Configuration Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDR5foaudZFeW_eyYQXAdyL-BdiiVT7s0E",
       authDomain: "depenses-53cc7.firebaseapp.com",
@@ -1129,22 +990,19 @@
       appId: "1:773556335455:web:8051e49f0033b14ee7fcea"
     };
 
-    // Initialisation
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // State global
     let state = {
-      config: null, // { personneA, personneB, resetAt }
+      config: null,
       operations: [],
-      currentType: "depense", // depense | revenu
-      currentPerson: "",      // personneA value
-      currentCategory: "",    // category selected
-      currentFilter: "all",   // all | depense | revenu
-      selectedMonthFilter: "current" // current | all | "YYYY-MM"
+      currentType: "depense",
+      currentPerson: "",
+      currentCategory: "",
+      currentFilter: "all",
+      selectedMonthFilter: "current"
     };
 
-    // Elements DOM
     const elDisplayCurrentMonth = document.getElementById("display-current-month");
     const elMonthValExpense = document.getElementById("month-val-expense");
     const elMonthValIncome = document.getElementById("month-val-income");
@@ -1154,6 +1012,8 @@
     const elLabelPersonB = document.getElementById("label-person-b");
     const elBoxPersonA = document.getElementById("box-person-a");
     const elBoxPersonB = document.getElementById("box-person-b");
+    const elAvGwen = document.getElementById("av-gwen");
+    const elAvMax = document.getElementById("av-max");
 
     const elValTotalFoyer = document.getElementById("val-total-foyer");
     const elValPersonA = document.getElementById("val-person-a");
@@ -1174,7 +1034,7 @@
     const elInputPartage = document.getElementById("input-partage");
     const elTogglePartageWrapper = document.getElementById("toggle-partage-wrapper");
     const elBtnSubmitOp = document.getElementById("btn-submit-op");
-    const elCatChips = document.querySelectorAll(".cat-chip");
+    const elCatChips = document.querySelectorAll(".chip-item");
 
     const elHistoryContainer = document.getElementById("history-container");
     const elFilterBtns = document.querySelectorAll(".filter-btn");
@@ -1191,19 +1051,12 @@
     const elBtnResetCancel = document.getElementById("btn-reset-cancel");
     const elBtnResetConfirm = document.getElementById("btn-reset-confirm");
 
-    // Default Today Date
     const todayISO = new Date().toISOString().split("T")[0];
     elInputDate.value = todayISO;
-
-    // Current Month Key "YYYY-MM"
     const currentMonthKey = todayISO.substring(0, 7);
 
-    // Formatters
     const formatEUR = (num) => {
-      return new Intl.NumberFormat("fr-FR", {
-        style: "currency",
-        currency: "EUR"
-      }).format(num);
+      return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(num);
     };
 
     const formatDateFr = (dateStr) => {
@@ -1211,7 +1064,7 @@
       const parts = dateStr.split("-");
       if (parts.length !== 3) return dateStr;
       const d = new Date(parts[0], parts[1] - 1, parts[2]);
-      return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+      return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
     };
 
     const formatMonthYear = (dateStr) => {
@@ -1223,17 +1076,13 @@
       return res.charAt(0).toUpperCase() + res.slice(1);
     };
 
-    // Helper for Person Colors
     function isMax(name) {
       return name && name.toLowerCase().includes("max");
     }
 
-    // Initialize Header Month Display
-    elDisplayCurrentMonth.textContent = `📅 ${formatMonthYear(todayISO)}`;
+    elDisplayCurrentMonth.textContent = formatMonthYear(todayISO);
 
-    // Setup Listeners Firestore
     function initSync() {
-      // 1. Ecouter Config
       const configRef = doc(db, "config", "etat");
       onSnapshot(configRef, (snapshot) => {
         if (!snapshot.exists()) {
@@ -1243,11 +1092,8 @@
           updateConfigUI();
           calculateBalances();
         }
-      }, (error) => {
-        console.error("Erreur ecoute config:", error);
       });
 
-      // 2. Ecouter Operations
       const opsRef = collection(db, "operations");
       const q = query(opsRef, orderBy("date", "desc"));
       onSnapshot(q, (snapshot) => {
@@ -1267,12 +1113,9 @@
         updateMonthFilterDropdownOptions();
         calculateBalances();
         renderHistory();
-      }, (error) => {
-        console.error("Erreur ecoute operations:", error);
       });
     }
 
-    // Config Modal Management
     function openConfigModal(isFirstLaunch = false) {
       if (isFirstLaunch) {
         elBtnCfgCancel.classList.add("hidden");
@@ -1283,11 +1126,11 @@
         elCfgPersonA.value = state.config?.personneA || "";
         elCfgPersonB.value = state.config?.personneB || "";
       }
-      elModalConfig.classList.add("active");
+      elModalConfig.classList.add("open");
     }
 
     function closeConfigModal() {
-      elModalConfig.classList.remove("active");
+      elModalConfig.classList.remove("open");
     }
 
     elBtnOpenConfig.addEventListener("click", () => openConfigModal(false));
@@ -1302,29 +1145,16 @@
         return;
       }
 
-      if (nameA.toLowerCase() === nameB.toLowerCase()) {
-        alert("Veuillez saisir deux prénoms différents.");
-        return;
-      }
-
       try {
         const configRef = doc(db, "config", "etat");
         if (!state.config) {
-          await setDoc(configRef, {
-            personneA: nameA,
-            personneB: nameB,
-            resetAt: serverTimestamp()
-          });
+          await setDoc(configRef, { personneA: nameA, personneB: nameB, resetAt: serverTimestamp() });
         } else {
-          await updateDoc(configRef, {
-            personneA: nameA,
-            personneB: nameB
-          });
+          await updateDoc(configRef, { personneA: nameA, personneB: nameB });
         }
         closeConfigModal();
       } catch (err) {
-        console.error("Erreur enregistrement config:", err);
-        alert("Impossible d'enregistrer la configuration.");
+        console.error(err);
       }
     });
 
@@ -1339,13 +1169,15 @@
       elBtnPersonA.textContent = nameA;
       elBtnPersonB.textContent = nameB;
 
-      // Assign styling boxes based on name
+      elAvGwen.textContent = nameA.charAt(0).toUpperCase();
+      elAvMax.textContent = nameB.charAt(0).toUpperCase();
+
       if (isMax(nameA)) {
-        elBoxPersonA.className = "person-box person-max";
-        elBoxPersonB.className = "person-box person-gwen";
+        elBoxPersonA.className = "person-card max";
+        elBoxPersonB.className = "person-card gwen";
       } else {
-        elBoxPersonA.className = "person-box person-gwen";
-        elBoxPersonB.className = "person-box person-max";
+        elBoxPersonA.className = "person-card gwen";
+        elBoxPersonB.className = "person-card max";
       }
 
       if (!state.currentPerson || (state.currentPerson !== nameA && state.currentPerson !== nameB)) {
@@ -1354,17 +1186,15 @@
       updateFormPersonButtons();
     }
 
-    // Category Emoji Pills Selection
     elCatChips.forEach(chip => {
       chip.addEventListener("click", () => {
-        if (chip.classList.contains("active")) {
-          chip.classList.remove("active");
+        if (chip.classList.contains("selected")) {
+          chip.classList.remove("selected");
           state.currentCategory = "";
         } else {
-          elCatChips.forEach(c => c.classList.remove("active"));
-          chip.classList.add("active");
+          elCatChips.forEach(c => c.classList.remove("selected"));
+          chip.classList.add("selected");
           state.currentCategory = chip.dataset.cat;
-          
           if (!elInputDescription.value.trim()) {
             elInputDescription.value = chip.dataset.cat;
           }
@@ -1372,18 +1202,17 @@
       });
     });
 
-    // Form Controls
     elBtnTypeDepense.addEventListener("click", () => {
       state.currentType = "depense";
-      elBtnTypeDepense.className = "segment-btn active-expense";
-      elBtnTypeRevenu.className = "segment-btn";
+      elBtnTypeDepense.className = "picker-btn active-exp";
+      elBtnTypeRevenu.className = "picker-btn";
       elTogglePartageWrapper.classList.remove("hidden");
     });
 
     elBtnTypeRevenu.addEventListener("click", () => {
       state.currentType = "revenu";
-      elBtnTypeRevenu.className = "segment-btn active-income";
-      elBtnTypeDepense.className = "segment-btn";
+      elBtnTypeRevenu.className = "picker-btn active-inc";
+      elBtnTypeDepense.className = "picker-btn";
       elTogglePartageWrapper.classList.add("hidden");
     });
 
@@ -1403,39 +1232,26 @@
       if (!state.config) return;
       const nameA = state.config.personneA;
       const nameB = state.config.personneB;
-
       const isA = state.currentPerson === nameA;
-      
+
       const classA = isMax(nameA) ? "active-max" : "active-gwen";
       const classB = isMax(nameB) ? "active-max" : "active-gwen";
 
       if (isA) {
-        elBtnPersonA.className = `segment-btn ${classA}`;
-        elBtnPersonB.className = "segment-btn";
+        elBtnPersonA.className = `picker-btn ${classA}`;
+        elBtnPersonB.className = "picker-btn";
       } else {
-        elBtnPersonB.className = `segment-btn ${classB}`;
-        elBtnPersonA.className = "segment-btn";
+        elBtnPersonB.className = `picker-btn ${classB}`;
+        elBtnPersonA.className = "picker-btn";
       }
     }
 
-    // Submit New Operation
     elBtnSubmitOp.addEventListener("click", async () => {
       const montantRaw = elInputMontant.value.replace(',', '.');
       const montant = parseFloat(montantRaw);
 
       if (isNaN(montant) || montant <= 0) {
-        alert("Veuillez saisir un montant valide supérieur à 0.");
-        return;
-      }
-
-      if (!state.currentPerson) {
-        alert("Veuillez sélectionner la personne concernée.");
-        return;
-      }
-
-      const dateVal = elInputDate.value;
-      if (!dateVal) {
-        alert("Veuillez indiquer une date.");
+        alert("Veuillez saisir un montant valide.");
         return;
       }
 
@@ -1450,7 +1266,7 @@
         personne: state.currentPerson,
         partage: state.currentType === "depense" ? elInputPartage.checked : false,
         description: desc,
-        date: dateVal,
+        date: elInputDate.value || todayISO,
         createdAt: serverTimestamp()
       };
 
@@ -1458,38 +1274,27 @@
         await addDoc(collection(db, "operations"), newDoc);
         elInputMontant.value = "";
         elInputDescription.value = "";
-        elCatChips.forEach(c => c.classList.remove("active"));
+        elCatChips.forEach(c => c.classList.remove("selected"));
         state.currentCategory = "";
-        elInputDate.value = new Date().toISOString().split("T")[0];
+        elInputDate.value = todayISO;
       } catch (err) {
-        console.error("Erreur lors de l'ajout de l'opération:", err);
-        alert("Erreur lors de l'enregistrement de l'opération.");
+        console.error(err);
       }
     });
 
-    // Reset Debt Modal
-    elBtnResetDebt.addEventListener("click", () => {
-      elModalResetDebt.classList.add("active");
-    });
-
-    elBtnResetCancel.addEventListener("click", () => {
-      elModalResetDebt.classList.remove("active");
-    });
+    elBtnResetDebt.addEventListener("click", () => elModalResetDebt.classList.add("open"));
+    elBtnResetCancel.addEventListener("click", () => elModalResetDebt.classList.remove("open"));
 
     elBtnResetConfirm.addEventListener("click", async () => {
       try {
         const configRef = doc(db, "config", "etat");
-        await updateDoc(configRef, {
-          resetAt: serverTimestamp()
-        });
-        elModalResetDebt.classList.remove("active");
+        await updateDoc(configRef, { resetAt: serverTimestamp() });
+        elModalResetDebt.classList.remove("open");
       } catch (err) {
-        console.error("Erreur lors du solde des dettes:", err);
-        alert("Erreur lors du solde des dettes partagées.");
+        console.error(err);
       }
     });
 
-    // Filter Buttons & Month Dropdown
     elFilterBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         elFilterBtns.forEach(b => b.classList.remove("active"));
@@ -1507,14 +1312,11 @@
     function updateMonthFilterDropdownOptions() {
       const monthsSet = new Set();
       state.operations.forEach(op => {
-        if (op.date) {
-          monthsSet.add(op.date.substring(0, 7));
-        }
+        if (op.date) monthsSet.add(op.date.substring(0, 7));
       });
       monthsSet.add(currentMonthKey);
 
       const sortedMonths = Array.from(monthsSet).sort().reverse();
-
       let optionsHTML = `<option value="current">Mois en cours (${formatMonthYear(currentMonthKey + "-01")})</option>`;
       optionsHTML += `<option value="all">Tous les mois</option>`;
 
@@ -1528,7 +1330,6 @@
       elSelectMonthFilter.value = state.selectedMonthFilter;
     }
 
-    // Calculate Balances & Monthly Stats
     function calculateBalances() {
       if (!state.config) return;
       const nameA = state.config.personneA;
@@ -1557,7 +1358,6 @@
         const isPersonB = op.personne === nameB;
         const isCurrentMonth = op.date && op.date.substring(0, 7) === currentMonthKey;
 
-        // Total Overall Balances
         if (op.type === "revenu") {
           if (isPersonA) totalIncomeA += m;
           if (isPersonB) totalIncomeB += m;
@@ -1567,7 +1367,6 @@
           if (isPersonB) totalExpenseB += m;
           if (isCurrentMonth) monthExpense += m;
 
-          // Shared Debt Balance
           if (op.partage === true) {
             let opTimeMillis = 0;
             if (op.createdAt && typeof op.createdAt.toMillis === "function") {
@@ -1584,28 +1383,19 @@
         }
       });
 
-      // Update Monthly Stats Banner
       const monthBalance = monthIncome - monthExpense;
       elMonthValExpense.textContent = formatEUR(monthExpense);
       elMonthValIncome.textContent = formatEUR(monthIncome);
       elMonthValBalance.textContent = formatEUR(monthBalance);
-      
-      if (monthBalance >= 0) {
-        elMonthValBalance.className = "month-stat-val income";
-      } else {
-        elMonthValBalance.className = "month-stat-val expense";
-      }
 
-      // Solde Total Foyer = Total Revenus (A+B) - Total Dépenses (A+B)
       const foyerTotal = (totalIncomeA + totalIncomeB) - (totalExpenseA + totalExpenseB);
       const personABalance = totalIncomeA - totalExpenseA;
       const personBBalance = totalIncomeB - totalExpenseB;
 
-      elValTotalFoyer.innerHTML = `${formatEUR(foyerTotal).replace('€', '')} <span class="currency">€</span>`;
+      elValTotalFoyer.textContent = formatEUR(foyerTotal);
       elValPersonA.textContent = formatEUR(personABalance);
       elValPersonB.textContent = formatEUR(personBBalance);
 
-      // Solde de dettes partagées
       const netDebt = (sharedExpensePaidByA / 2) - (sharedExpensePaidByB / 2);
 
       if (Math.abs(netDebt) < 0.001) {
@@ -1621,7 +1411,6 @@
       }
     }
 
-    // Render History
     function renderHistory() {
       const filtered = state.operations.filter(op => {
         if (state.currentFilter === "depense" && op.type !== "depense") return false;
@@ -1637,11 +1426,10 @@
       });
 
       if (filtered.length === 0) {
-        elHistoryContainer.innerHTML = `<div class="empty-state">Aucune opération enregistrée pour cette sélection.</div>`;
+        elHistoryContainer.innerHTML = `<div class="empty-state">Aucune opération pour cette sélection.</div>`;
         return;
       }
 
-      // Group by Month Year
       const groups = {};
       filtered.forEach(op => {
         const monthKey = formatMonthYear(op.date);
@@ -1651,8 +1439,8 @@
 
       let html = "";
       for (const [month, items] of Object.entries(groups)) {
-        html += `<div class="month-group">
-          <div class="month-title">${month}</div>`;
+        html += `<div class="history-group">
+          <div class="history-month-header">${month}</div>`;
 
         items.forEach(op => {
           const isExpense = op.type === "depense";
@@ -1662,22 +1450,22 @@
           const badgeClass = isMax(op.personne) ? "badge-max" : "badge-gwen";
 
           html += `
-            <div class="operation-item">
-              <div class="op-left">
-                <div class="op-type-icon ${op.type}">${icon}</div>
-                <div class="op-info">
-                  <div class="op-description">${escapeHtml(desc)}</div>
-                  <div class="op-meta">
+            <div class="history-item">
+              <div class="item-left">
+                <div class="item-icon ${op.type}">${icon}</div>
+                <div class="item-details">
+                  <div class="item-title">${escapeHtml(desc)}</div>
+                  <div class="item-sub">
                     <span>${formatDateFr(op.date)}</span> •
-                    <span class="op-badge-person ${badgeClass}">${escapeHtml(op.personne || "")}</span>
-                    ${op.partage ? '<span class="op-badge-shared">Partagée</span>' : ''}
+                    <span class="badge-name ${badgeClass}">${escapeHtml(op.personne || "")}</span>
+                    ${op.partage ? '<span class="badge-shared">Partagée</span>' : ''}
                   </div>
                 </div>
               </div>
-              <div class="op-right">
-                <div class="op-amount ${op.type}">${amountSign}${formatEUR(op.montant)}</div>
-                <button class="btn-delete-op" data-id="${op.id}" title="Supprimer l'opération">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <div class="item-right">
+                <div class="item-amount ${op.type}">${amountSign}${formatEUR(op.montant)}</div>
+                <button class="btn-del" data-id="${op.id}" title="Supprimer">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"/>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                   </svg>
@@ -1692,16 +1480,14 @@
 
       elHistoryContainer.innerHTML = html;
 
-      // Attach Delete Handlers
-      document.querySelectorAll(".btn-delete-op").forEach(btn => {
-        btn.addEventListener("click", async (e) => {
+      document.querySelectorAll(".btn-del").forEach(btn => {
+        btn.addEventListener("click", async () => {
           const id = btn.dataset.id;
-          if (confirm("Voulez-vous vraiment supprimer cette opération ?")) {
+          if (confirm("Supprimer cette opération ?")) {
             try {
               await deleteDoc(doc(db, "operations", id));
             } catch (err) {
-              console.error("Erreur suppression:", err);
-              alert("Impossible de supprimer l'opération.");
+              console.error(err);
             }
           }
         });
@@ -1710,17 +1496,10 @@
 
     function escapeHtml(str) {
       return String(str).replace(/[&<>"']/g, function(m) {
-        return {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-        }[m];
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
       });
     }
 
-    // Launch Realtime Listeners
     initSync();
   </script>
 </body>
